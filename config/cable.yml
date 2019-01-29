@@ -1,0 +1,14 @@
+development:
+  adapter: redis
+  url: <%= Rails.application.secrets.redis_url %>
+  channel_prefix: <%= Rails.application.secrets.redis_channel_prefix %>
+
+test:
+  adapter: redis
+  url: <%= Rails.application.secrets.redis_url %>
+  channel_prefix: <%= Rails.application.secrets.redis_channel_prefix %>
+
+production:
+  adapter: redis
+  url: <%= Rails.application.secrets.redis_url %>
+  channel_prefix: <%= Rails.application.secrets.redis_channel_prefix %>

@@ -1,0 +1,26 @@
+%br
+.row
+  .col-9
+    %table.table.table-striped
+      %body
+      - @answers.each do |a|
+        %tr
+          %td= a.text
+          %td.pull-right
+            - if can? :edit, a
+              = link_to edit_knowledge_basis_answer_path(@knowledge_basis, a) do
+                %i.fa.fa-cog
+            - if a.contains_unmatched_placeholders?
+              %i.fa.fa-exclamation-triangle{title: "Unmatched placeholder(s)!"}
+
+  .col-3
+    .list-group
+      = link_to new_knowledge_basis_answer_path(@knowledge_basis), class: "btn btn-primary" do
+        Create new answer
+      %br
+      - if can? :import, Answer
+        = simple_form_for(@knowledge_basis, url: import_knowledge_basis_answers_path, html: { method: :post }) do |form|
+          = form.file_field :file, accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" , style: "  display: none", onchange: "this.form.submit()"
+          = link_to "Import knowledge base", "#", onclick: "$('#knowledge_basis_file').trigger('click')", class: "btn btn-primary", style: "width: 100%"
+      %br
+      = link_to "Export knowledge base", export_knowledge_basis_answers_path(@knowledge_basis, format: "csv"), class: "btn btn-primary", style: "width: 100%"

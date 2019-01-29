@@ -1,0 +1,58 @@
+%nav.navbar.navbar-expand-md.navbar-light.bg-light.fixed-top
+  = link_to "#", class: "navbar-brand d-lg-none" do
+    %h5 FAQ Bot Framework
+  - if user_signed_in?
+    %button.navbar-toggler.navbar-toggler-right{"type": "button", "data-toggle": "collapse", "data-target": "#navbarNav", "aria-controls": "navbarNav", "aria-expanded": "false", "aria-label": "Toggle navigation"}
+      %span.navbar-toggler-icon
+  
+    .collapse.navbar-collapse#navbarNav
+      %ul.navbar.navbar-nav.mr-auto
+        %li.nav-item
+          %span.float-left
+            = select_tag "", options_for_select(current_user.knowledge_bases.map{|kb| [kb.name, knowledge_basis_answers_url(kb.id)]}, @knowledge_basis.present? && @knowledge_basis.persisted? ? knowledge_basis_answers_url(@knowledge_basis) : nil), class: "form-control select mr-sm-2", onchange: "window.location=$(this).val();", include_blank: "Select ..."
+          - if @knowledge_basis.present? && @knowledge_basis.persisted?
+            %span.float-left
+              = link_to edit_knowledge_basis_path(@knowledge_basis), class: "btn btn-default" do
+                %i.fa.fa-cog{style: "color: #464a4c;"}
+        
+        - if @knowledge_basis.present? && @knowledge_basis.persisted?
+          %li.nav-item
+            = link_to knowledge_basis_questions_url(@knowledge_basis), class: "nav-link" do
+              Dashboard
+              %span.badge.badge-dark{style: (unanswered_count = @knowledge_basis.questions.not_training.count) == 0 ? "display: none" : nil, id: "unanswered_questions_badge" }
+                = unanswered_count
+          %li.nav-item
+            = link_to knowledge_basis_answers_url(@knowledge_basis), class: "nav-link" do
+              Knowledge
+
+      %ul.navbar.navbar-nav
+        - if @knowledge_basis.present? && @knowledge_basis.persisted?
+          - training_in_progress = TrainClassifierJob::active?
+          %li.nav-item{style: "padding-right: 5px"}
+
+            = button_to (training_in_progress ? "Training ..." : "Train classifier now!"), knowledge_basis_train_path(@knowledge_basis), method: :post, class: "btn btn-primary", id: "train_classifier_button", style: "width: 180px", disabled: training_in_progress
+
+      %ul.navbar.navbar-nav
+        - if @knowledge_basis.present? && @knowledge_basis.persisted?
+          %li.nav-item{style: "padding-right: 5px"}
+            = link_to knowledge_basis_export_path(@knowledge_basis, format: "csv"), class: "btn btn-default" do
+              %i.fa.fa-table{style: "color: #464a4c;"}
+
+        - if current_user.role == "admin"
+          
+          %li.nav-item.dropdown
+            = link_to "Administration", "#", "id": "navbarDropdownMenuLink", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false", class: "nav-link dropdown-toggle"
+            .dropdown-menu{"aria-labelledby": "navbarDropdownMenuLink"}
+              = link_to "Knowledge bases", knowledge_bases_path, class: "dropdown-item"
+              = link_to "Users", admin_users_path, class: "dropdown-item"
+              = link_to "Analytics", knowledge_basis_analytics_path(@knowledge_basis), class: "dropdown-item" if @knowledge_basis.present? && @knowledge_basis.persisted?
+              = link_to "Logs", admin_custom_loggers_path, class: "dropdown-item"
+              = link_to "User sessions", admin_user_sessions_path, class: "dropdown-item"
+      
+        %li.nav-item.dropdown
+          = link_to current_user, "#", "id": "navbarDropdownMenuLink", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded  ": "false", class: "nav-link dropdown-toggle"
+          .dropdown-menu{"aria-labelledby": "navbarDropdownMenuLink"}
+            = link_to "My account", edit_admin_user_path(current_user), class: "dropdown-item"
+            .dropdown-divider
+            = link_to "Log out", destroy_user_session_path, method: :delete, class: "dropdown-item"
+

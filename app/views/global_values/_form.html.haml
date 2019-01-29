@@ -1,0 +1,14 @@
+= simple_form_for([knowledge_basis, global_value], html: { class: 'form-horizontal' }) do |form|
+  
+  = form.input :name
+  = form.input :value
+  = form.input :knowledge_basis_id, as: "hidden", input_html: {value: knowledge_basis.id}
+
+  = form.submit "Save", class: "btn btn-primary"
+  = link_to "Cancel", knowledge_basis_answers_path(knowledge_basis, tab: "global_values"), class: "btn"
+
+
+  - unless global_value.new_record?
+    .float-right
+      = link_to "Delete", knowledge_basis_global_value_path(@global_value), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete the global value '#{global_value.name}'?" } if can? :destroy, global_value
+

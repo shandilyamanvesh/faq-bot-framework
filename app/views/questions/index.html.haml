@@ -1,0 +1,50 @@
+.container
+  .row
+    .col-9
+      #no_questions{style: @questions.blank? ? nil : "display: none"}
+        .alert.alert-info
+          .alert-heading 
+            %h3 No pending questions
+          %p.mb-0 All questions have been handled, good job!
+      
+      #unmatched_questions{style: (@questions.unmatched.count > 0 && params[:filter] != "matched") ? nil : "display: none"}
+        %h3 Unmatched questions
+        - @questions.unmatched.each do |q|
+          = render partial: "card", locals: {q: q, knowledge_basis: @knowledge_basis, user: current_user}
+
+      #matched_questions{style: (@questions.matched.count > 0 && params[:filter] != "unmatched") ? nil : "display: none"}
+        %h3 Matched questions
+        - @questions.matched.each do |q|
+          = render partial: "card", locals: {q: q, knowledge_basis: @knowledge_basis, user: current_user}
+
+      = paginate @questions
+      %br
+
+      %p.text-center
+        = link_to "Delete all pending questions", knowledge_basis_clear_dashboard_path(@knowledge_basis), data: { confirm: "Would you really like to clear this dashboard?" }, method: :delete if @questions.total_count > 1
+
+
+
+    .col-3
+      .list-group
+        = link_to knowledge_basis_questions_path(@knowledge_basis, filter: "unmatched"), class: "list-group-item list-group-item-action justify-content-between #{params[:filter] == 'unmatched' ? 'active' : nil}" do
+          Unmatched
+          %span.badge.badge-dark.badge-pill{style: (@unmatched_count == 0 ? "display: none" : nil), id: "unmatched_questions_badge" }
+            = @unmatched_count
+        = link_to knowledge_basis_questions_path(@knowledge_basis, filter: "matched"), class: "list-group-item list-group-item-action justify-content-between #{params[:filter] == 'matched' ? 'active' : nil}" do
+          Matched
+          %span.badge.badge-dark.badge-pill{style: (@matched_count == 0 ? "display: none" : nil), id: "matched_questions_badge" }
+            = @matched_count
+      
+      - if @knowledge_basis.allow_anonymous_access
+        %br
+        %iframe{src: knowledge_basis_widget_url(@knowledge_basis.hash_id), style: "width: 100%; border:1px solid rgba(0, 0, 0, 0.125);border-radius:0.25rem;height:250px;padding:10px"}
+  
+        %br
+        %br
+        .card
+          .card-header
+            Widget code
+          %div{style: "padding: 10px"}
+            = text_area_tag :embed_code, "<iframe width=\"250\" height=\"300\" src=\"#{knowledge_basis_widget_url(@knowledge_basis.hash_id)}\" frameborder=\"0\"></iframe>", class: "form-control", style: "font-size:   12px;height:100px;", onclick: "this.select();", readonly: true
+            

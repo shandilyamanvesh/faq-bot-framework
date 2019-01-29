@@ -1,0 +1,16 @@
+!!! 5
+%html
+  %head
+    %title= "FAQ Bot Framework – Widget"
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => 'reload'
+    = stylesheet_link_tag 'widget', media: 'all'
+    = javascript_include_tag "https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"
+    = javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.6/linkify.min.js'
+    = javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.6/linkify-string.min.js'
+    = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload'
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}
+    %style{type: "text/css"}
+      = @knowledge_basis.widget_css
+
+  %body
+    = render partial: 'questions/chat_window'

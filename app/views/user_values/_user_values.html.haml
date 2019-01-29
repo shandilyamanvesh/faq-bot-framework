@@ -1,0 +1,17 @@
+%br
+.row
+  .col-9
+
+    %table.table.table-striped
+      - user_values.each do |uv|
+        %tr
+          %td= uv.name
+          %td= uv.data_type
+          %td.pull-right
+            = link_to "Edit", edit_knowledge_basis_user_value_path(@knowledge_basis, uv), class: "btn btn-primary"
+            = link_to "Delete", knowledge_basis_user_value_path(@knowledge_basis, uv), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete the user value '#{uv.name}'?" }
+
+  .col-3
+    .list-group
+      = link_to new_knowledge_basis_user_value_path, class: "btn btn-primary" do
+        Create new user value

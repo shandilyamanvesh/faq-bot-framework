@@ -1,0 +1,20 @@
+%h3 Analytics
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Answer
+      %th Matched
+      %th Training
+  %tbody
+    - @answers.each do |a|
+      %tr
+        %td= a.text
+        %td= link_to a.questions.matched.count, edit_knowledge_basis_answer_path(@knowledge_basis, a)
+        %td= link_to a.questions.training.count, edit_knowledge_basis_answer_path(@knowledge_basis, a, tab: "training")
+
+
+.container
+  .row
+    .col-6
+      = bar_chart @data, @options

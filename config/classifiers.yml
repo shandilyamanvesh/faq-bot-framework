@@ -1,0 +1,17 @@
+default: &default
+  classifiers_dir: <%= ENV['CLASSIFIERS_DIR'] || "/home/classifiers" %>
+  pretrained_vectors_dir: <%= ENV['PRETRAINED_VECTORS_DIR'] || "/home/pretrained_vectors" %>
+  fast_text_path: "../fastText"
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+staging:
+  <<: *default
+  fast_text_path: "../../../fastText"
+
+production:
+  <<: *default

@@ -1,0 +1,6 @@
+.git
+.byebug_history
+tmp/*
+.dockerignore
+dump.rdb
+/home

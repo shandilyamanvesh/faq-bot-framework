@@ -1,0 +1,4 @@
+#messages
+  - if @knowledge_basis.welcome_message.present?
+    .alert.alert-info{style: "margin-right: 20px"}= @knowledge_basis.welcome_message
+= render partial: 'questions/question_form', locals: {question: @question, knowledge_basis: @knowledge_basis}

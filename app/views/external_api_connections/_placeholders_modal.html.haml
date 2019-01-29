@@ -1,0 +1,16 @@
+.modal-dialog{role: "document"}
+  .modal-content
+    .modal-header
+      %h5.modal-title Placeholders
+      %button.close{type: "button", "data-dismiss": "modal", "aria-label": "Close"}
+      %span{"aria-hidden": "true"} &times;
+    = simple_form_for([knowledge_basis, external_api_connection], remote: true, html: { class: 'form-horizontal' }) do |form|
+      .modal-body    
+        %table.table
+          %tbody
+            = form.simple_fields_for :placeholders do |q|
+              = render 'placeholder_fields', :f => q
+  
+      .modal-footer
+        = form.submit "Save", class: "btn btn-primary"
+        = link_to "Cancel", "#", class: "btn",  "data-dismiss": "modal"

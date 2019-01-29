@@ -1,0 +1,21 @@
+%tr.nested-fields
+  %td
+    = f.input :text, as: :string, label: false
+    = f.input :assigned_by, as: "hidden", input_html: {value: current_user.id}
+    = f.input :answer_id, as: "hidden", input_html: {class: "answer-id"}
+    = f.input :confirmed_at, as: "hidden", input_html: {class: "confirmed_at", value: tab == "training" ? DateTime.now : f.object.confirmed_at}
+    = f.input :knowledge_basis_id, as: "hidden", input_html: {value: @knowledge_basis.id}
+  %td{style: "width: 100px"}= f.input :probability, label: false, input_html: {class: "probability", value: tab == "training" ? 1.0 : f.object.probability, title: "Probability"}, readonly: true
+  %td{style: "width: 90px"}
+    %span.input-group-btn
+      = link_to_remove_association f, class: "btn btn-danger", title: "Delete", onclick: "deleteQuestion(this)" do
+        %i.fa.fa-trash
+  - if tab == "matched"
+    %td.unmatch{style: "width: 90px"}
+      %span.input-group-btn
+        = link_to "#", class: "btn btn-warning", title: "Unmatch", onclick: "unmatchQuestion(this)" do
+          %i.fa.fa-ban
+    %td.confirm{style: "width: 90px"}
+      %span.input-group-btn
+        = link_to "#", class: "btn btn-success", title: "Confirm", onclick: "confirmQuestion(this)" do
+          %i.fa.fa-check-circle

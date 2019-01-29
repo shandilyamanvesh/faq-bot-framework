@@ -1,0 +1,34 @@
+= simple_form_for([@knowledge_basis, @external_api_connection], html: { autocomplete: "off", class: 'form-horizontal' }) do |form|
+  
+  = form.input :name
+  = form.input :url, label_html: {class: "has-tip", title: "Provide the API url here. Use placeholders to define variable parameters linked to user values or global values.\n\nExample: http://api.openweathermap.org/data/2.5/weather?q=[[city]]"}
+  - if @external_api_connection.placeholders.present?
+    - @external_api_connection.placeholders.each do |p|
+      %span.badge{class: p.replaceable.blank? ? "badge-danger": "badge-info", }= link_to p.name, "#", "data-toggle": "modal", "data-target": "#placeholdersDialog", style: "color:white"
+    %br
+    %br
+
+  .card.mb-3
+    .card-header
+      OAuth authentification
+      %i.fa.fa-question-circle{title: "Provide credentials for optional OAuth 2.0 authentification here"}
+
+    .card-body
+      = form.input :oauth2_token_url, label: "Token url"
+      = form.input :oauth2_scope, label: "Scope"
+      = form.input :oauth2_client_id, label: "Client id", input_html: { autocomplete: 'new-password' }
+      = form.input :oauth2_client_secret, label: "Client secret", as: :password, input_html: { autocomplete: 'new-password' }
+
+
+  = form.input :response_template, label_html: { "data-tooltip": true, class: "has-tip", title: "Pattern how the API response should be processed. Use placeholders to embed values in the string, for example:\n\nin response[\"city\"], it is response[\"weather\"][0][\"description\"] today"}
+
+  = form.input :knowledge_basis_id, as: "hidden", input_html: {value: knowledge_basis.id}
+
+  = form.submit "Save", class: "btn btn-primary"
+  = link_to "Cancel", knowledge_basis_answers_path(@knowledge_basis, tab: "external_api_connections"), class: "btn"
+
+
+  - unless @external_api_connection.new_record?
+    .float-right
+      = link_to "Delete", knowledge_basis_external_api_connection_path(@knowledge_basis, @external_api_connection), method: :delete, class: "btn btn-danger", data: { confirm: "Deleting the external API connection may render placeholders without value. Do you want to continue?" } if can? :destroy, @external_api_connection
+

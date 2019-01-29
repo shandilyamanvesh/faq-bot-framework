@@ -1,0 +1,19 @@
+%br
+.row
+  .col-9
+
+    %table.table.table-striped
+      - external_api_connections.each do |eac|
+        %tr
+          %td
+            = eac.name
+            - if eac.contains_unmatched_placeholders?
+              %i.fa.fa-exclamation-triangle{title: "Unmatched placeholder(s)!"}
+          %td.pull-right
+            = link_to "Edit", edit_knowledge_basis_external_api_connection_path(@knowledge_basis, eac), class: "btn btn-primary"
+            = link_to "Delete", knowledge_basis_external_api_connection_path(@knowledge_basis, eac), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete the external API '#{eac.name}'?" }
+
+  .col-3
+    .list-group
+      = link_to new_knowledge_basis_external_api_connection_path(@knowledge_basis), class: "btn btn-primary" do
+        Create new API connection

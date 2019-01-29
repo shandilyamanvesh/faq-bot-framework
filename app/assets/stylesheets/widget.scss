@@ -1,0 +1,21 @@
+#chat_form {
+	margin-bottom: 0;
+	font-size: 12px;	
+}
+
+#chat_form #messages {
+	font-size: 12px;
+}
+
+#chat_form button {
+	margin-top: 10px;
+}
+
+#chat_form #message {
+	width: 99%;
+}
+
+.btn:focus, .form-control:focus {
+  outline: none;
+  box-shadow: none;
+}

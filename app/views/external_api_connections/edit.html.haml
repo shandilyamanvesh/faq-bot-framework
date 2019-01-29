@@ -1,0 +1,7 @@
+%h3 Edit API connection
+
+= render partial: "form", locals: { knowledge_basis: @knowledge_basis, external_api_connection: @external_api_connection }
+
+- if @external_api_connection.placeholders.present?
+  .modal{tabindex: "-1", role: "dialog", id: "placeholdersDialog"}
+    = render "placeholders_modal", knowledge_basis: @knowledge_basis, external_api_connection: @external_api_connection

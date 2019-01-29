@@ -1,0 +1,17 @@
+%br
+.row
+  .col-9
+
+    %table.table.table-striped
+      - global_values.each do |gv|
+        %tr
+          %td= gv.name
+          %td= gv.value
+          %td.pull-right
+            = link_to "Edit", edit_knowledge_basis_global_value_path(@knowledge_basis, gv), class: "btn btn-primary"
+            = link_to "Delete", knowledge_basis_global_value_path(@knowledge_basis, gv), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to delete the global value '#{gv.name}'?" }
+
+  .col-3
+    .list-group
+      = link_to new_knowledge_basis_global_value_path, class: "btn btn-primary" do
+        Create new global value

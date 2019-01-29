@@ -1,0 +1,14 @@
+%tr.nested-fields
+  %td
+    %span{class: "badge #{f.object.replaceable.blank? ? "badge-danger": "badge-info"}"}= f.object.name
+  %td
+    = f.input :replaceable_type, label: false, collection: [["Global values", "GlobalValue"], ["User values", "UserValue"], ["External APIs", "ExternalApiConnection"]], include_blank: "Select source ...", input_html: {onchange: "updatePlaceholderSelect(this)"}
+    = f.input :id, as: "hidden", input_html: {value: f.object.id}
+  %td.replaceable-select.empty{style: f.object.replaceable_type == "" ? "display:block": "display:none"}
+    = f.input :replaceable_id, label: false, disabled: (f.object.replaceable_type != ""), input_html: {class: "replaceable-select empty", value: "", style: "display: none"}
+  %td.replaceable-select.GlobalValue{style: f.object.replaceable_type == "GlobalValue" ? "display:block": "display:none"}
+    = f.input :replaceable_id, label: false, collection: @knowledge_basis.global_values.map{|gv| [gv.name, gv.id]}, include_blank: "Select value ...", disabled: (f.object.replaceable_type != "GlobalValue"), input_html: {class: "replaceable-select GlobalValue"}
+  %td.replaceable-select.UserValue{style: f.object.replaceable_type == "UserValue" ? "display:block": "display:none"}
+    = f.input :replaceable_id, label: false, collection: @knowledge_basis.user_values.map{|uv| [uv.name, uv.id]}, include_blank: "Select value ...", disabled: (f.object.replaceable_type != "UserValue"), input_html: {class: "replaceable-select UserValue"}
+  %td.replaceable-select.ExternalApiConnection{style: f.object.replaceable_type == "ExternalApiConnection" ? "display:block": "display:none"}
+    = f.input :replaceable_id, label: false, collection: @knowledge_basis.external_api_connections.map{|eac| [eac.name, eac.id]}, include_blank: "Select API ...", disabled: (f.object.replaceable_type != "ExternalApiConnection"), input_html: {class: "replaceable-select ExternalApiConnection"}

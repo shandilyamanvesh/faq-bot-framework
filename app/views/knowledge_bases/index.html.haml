@@ -1,0 +1,27 @@
+.container
+  %h3 Knowledge bases
+  .row
+    .col-10
+      - if @knowledge_bases.blank?
+        .alert.alert-warning
+          .alert-heading 
+            %h3 No knowledge bases available yet
+          %p.mb-0 Please contact an admin user for help.
+      - else
+
+        %table.table.table-striped
+          - @knowledge_bases.each do |kb|
+            %tr
+              %td= link_to kb.name, knowledge_basis_questions_path(kb)
+              %td.pull-right
+                - if can? :edit, kb
+                  = link_to edit_knowledge_basis_path(kb) do
+                    %i.fa.fa-cog
+
+    .col-2
+      .list-group
+        - if can? :create, KnowledgeBasis
+          = link_to new_knowledge_basis_path, class: "btn btn-primary" do
+            %i.fa.fa-plus-circle
+            Add
+

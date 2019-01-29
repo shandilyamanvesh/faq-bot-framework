@@ -1,0 +1,69 @@
+%h3 Answer
+
+= simple_form_for([@knowledge_basis, @answer], html: { class: 'form-horizontal' }) do |form|
+  = form.input :text, label: false, input_html: {rows: 4}
+  - if @answer.placeholders.present?
+    - @answer.placeholders.each do |p|
+      %span.badge{class: p.replaceable.blank? ? "badge-danger": "badge-info", }= link_to p.name, "#", "data-toggle": "modal", "data-target": "#placeholdersDialog", style: "color:white"
+    %br
+    %br
+
+  = form.input :off_topic, label_html: { "data-tooltip": true, class: "has-tip", title: "Off topic answers will not be followed by the feedback question"}, input_html: {style: "margin-right: 5px"}
+  = form.input :knowledge_basis_id, as: "hidden"
+
+  %h3 Questions
+  
+  %ul.nav.nav-tabs{role: "tablist"}
+    %li.nav-item
+      = link_to "#matched", class: "nav-link #{@tab != 'training' ? 'active' : nil}", "data-toggle": "tab", role: "tab" do
+        Matched
+        %span.badge.badge-dark.matched
+          = @answer.questions.matched.count
+    %li.nav-item
+      = link_to "#training", class: "nav-link #{@tab == 'training' ? 'active' : nil}", "data-toggle": "tab", role: "tab" do
+        Training
+        %span.badge.badge-dark.training
+          = @answer.questions.training.count
+  
+  .tab-content
+    #matched.tab-pane{role: "tabpanel", class: @tab != 'training' ? 'active' : nil}
+      %br
+      
+      %table.table
+        %tbody.matched
+          = form.simple_fields_for :questions, form.object.questions.matched do |q|
+            = render 'question_fields', :f => q, tab: "matched"
+      .matched.empty.alert.alert-info{class: form.object.questions.matched.count > 0 ? "collapse" : nil}
+        .alert-heading 
+          %h4 All matched!
+        %p.mb-0 Nothing to do here.
+      
+    #training.tab-pane{role: "tabpanel", class: @tab == 'training' ? 'active' : nil}
+      %br
+
+      .training.empty.alert.alert-warning{class: form.object.questions.training.count > 0 ? "collapse" : nil}
+        .alert-heading 
+          %h4 No training data!
+        %p.mb-0 Add sample questions now. 
+
+      %table.table
+        %tbody.training
+          = form.simple_fields_for :questions, form.object.questions.training do |q|
+            = render 'question_fields', :f => q, tab: "training"
+      .links
+
+        = link_to_add_association form, :questions, data: {"association-insertion-node": "tbody.training", "association-insertion-method": "append"}, :render_options => { :locals => {tab: "training" }}, class: "btn btn-secondary" do
+          %i.fa.fa-plus-circle
+          Add training question
+
+  %br    
+  .form-group
+    = form.submit "Save", class: "btn btn-primary"
+    = link_to "Cancel", knowledge_basis_answers_path(@knowledge_basis), class: "btn"
+
+    .float-right
+      = link_to "Delete", knowledge_basis_answer_path(@knowledge_basis, @answer), method: :delete, class: "btn btn-danger", data: { confirm: "This action will delete the answer and all questions associated. Are you sure?" }
+
+- if @answer.placeholders.present?
+  .modal{tabindex: "-1", role: "dialog", id: "placeholdersDialog"}
+    = render "placeholders_modal", knowledge_basis: @knowledge_basis, answer: @answer
