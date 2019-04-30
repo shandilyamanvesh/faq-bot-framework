@@ -46,6 +46,8 @@ class KnowledgeBasesController < ApplicationController
           Classifier::FastText::reset(@knowledge_basis)
         when "bayes"
           Classifier::Bayes::reset(@knowledge_basis)
+        when "bert"
+          Classifier::Bert::reset(@knowledge_basis)
         end
         #retrain new classifier
         TrainClassifierJob.perform_later @knowledge_basis, current_user.id

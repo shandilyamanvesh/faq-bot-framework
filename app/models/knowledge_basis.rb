@@ -13,7 +13,7 @@ class KnowledgeBasis < ApplicationRecord
 
   before_validation :set_hash_id, on: :create
 
-	CLASSIFIERS = [["fastText", :fast_text], ["Bayesian", :bayes]]
+	CLASSIFIERS = [["fastText", :fast_text], ["Bayesian", :bayes], ["Bert", :bert]]
 
 	def reset_classifier
       case classifier
@@ -21,6 +21,8 @@ class KnowledgeBasis < ApplicationRecord
         Classifier::FastText::reset(self)
       when "bayes"
         Classifier::Bayes::reset(self)
+      when "bert"
+        Classifier::Bert::reset(self)
       end
 	end
 
@@ -30,6 +32,8 @@ class KnowledgeBasis < ApplicationRecord
       Classifier::FastText::train(self)
     when "bayes"
       Classifier::Bayes::train(self)
+    when "bert"
+      Classifier::Bert::train(self)
     end
   end
 
@@ -39,6 +43,8 @@ class KnowledgeBasis < ApplicationRecord
       Classifier::FastText::predict(self, text)
     when "bayes"
       Classifier::Bayes::predict(self, text)
+    when "bert"
+      Classifier::Bert::predict(self)
     end
 
     return answer_id, probability
