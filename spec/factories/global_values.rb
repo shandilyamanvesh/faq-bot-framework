@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :global_value do
     
   end
