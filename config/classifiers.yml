@@ -2,6 +2,8 @@ default: &default
   classifiers_dir: <%= ENV['CLASSIFIERS_DIR'] || "/home/whiz/workspace/clients_and_servers/classifiers" %>
   pretrained_vectors_dir: <%= ENV['PRETRAINED_VECTORS_DIR'] || "/home/whiz/workspace/clients_and_servers/wiki" %>
   fast_text_path: "/home/whiz/workspace/clients_and_servers/fasttext/fastText-0.2.0"
+  bert_base_dir: <%= ENV['BERT_BASE_DIR'] || "/data/ml_work/bert" %>
+  bert_trainfile_dir: <%= ENV['BERT_TRAINFILE_DIR'] || "/data/ml_work/bert/whizdata" %>
 
 development:
   <<: *default
