@@ -15,8 +15,9 @@ development:
   database: faq_bot_framework_development
   pool: 5
   username: root
-  password: whizuser
-  host: localhost
+  password: whizroot
+  host: mlnlp.whiz.ai
+  port: 3306
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -28,8 +29,9 @@ test:
   database: faq_bot_framework_test
   pool: 5
   username: root
-  password: whizuser
-  host: localhost
+  password: whizroot
+  host: mlnlp.whiz.ai
+  port: 3306
 
 staging:
   adapter: mysql2
