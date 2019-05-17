@@ -21,7 +21,7 @@ module Classifier
         end
       end
       so, se, s = Open3.capture3("python3 #{BASE_DIR}/train_classifier.py")
-      raise se unless status.success?
+      raise se unless s.success?
     end
   
     def self.predict(knowledge_basis, sentence)
