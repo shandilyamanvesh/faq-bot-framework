@@ -44,7 +44,7 @@ class KnowledgeBasis < ApplicationRecord
     when "bayes"
       Classifier::Bayes::predict(self, text)
     when "bert"
-      Classifier::Bert::predict(self)
+      Classifier::Bert::predict(self, text)
     end
 
     return answer_id, probability
