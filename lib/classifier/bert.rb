@@ -25,14 +25,16 @@ module Classifier
     end
   
     def self.predict(knowledge_basis, sentence)
-     if knowledge_basis && sentence
-        str, s = Open3.capture2("#{BASE_DIR}/predict_classifier.py --bulk_predict=false --sentence=#{sentence.downcase}")
+      answer_id = nil
+      probability = nil
+      if knowledge_basis && sentence
+        str, s = Open3.capture2("python3 #{BASE_DIR}/predict_classifier.py --bulk_predict=false --sentence=#{sentence.downcase}")
 
-        answer, probability = str.split('|')
-        answer_id = Answer.where(text: answer).first.id
-      else
-        answer_id = nil
-        probability = nil
+        if s.success?
+          str = str.split("\n").last
+          answer, probability = str.split('|')
+          answer_id = Answer.where(text: answer).first.id
+        end
       end
 
       return answer_id, probability.to_f
