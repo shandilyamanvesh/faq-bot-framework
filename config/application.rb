@@ -36,7 +36,7 @@ module FaqBotFramework
       logger.formatter = config.log_formatter
       config.logger    = logger
     else
-      rails_log_dir    = ENV["RAILS_LOG_DIR"] || "/home/manvesh/LogFiles"
+      rails_log_dir    = ENV["RAILS_LOG_DIR"] || "/home/ubuntu/LogFiles"
       FileUtils.mkdir_p rails_log_dir
       logfile          = File.join(rails_log_dir, "#{Rails.env}.log")
       logger           = ActiveSupport::Logger.new(logfile)
