@@ -28,7 +28,7 @@ module Classifier
       answer_id = nil
       probability = nil
       if knowledge_basis && sentence
-        str, s = Open3.capture2("python3 #{BASE_DIR}/predict_classifier.py --bulk_predict=false --sentence=#{sentence.downcase}")
+        str, s = Open3.capture2("python3 #{BASE_DIR}/predict_classifier.py --bulk_predict=false --sentence='#{sentence.downcase}'")
 
         if s.success?
           str = str.split("\n").last
