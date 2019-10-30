@@ -1,0 +1,19 @@
+%div{ :style => "margin-top: 40px;" }
+   .button-radio
+      %span{:class => "btn btn-primary btn-file"} 
+         Choose File 
+         = f.file_field :file, accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" 
+   
+   #center
+      .button-radio
+         = f.radio_button :popup_radio,"1", checked:true
+         Import knowledge base
+      
+      .button-radio
+         = f.radio_button :popup_radio,"2", checked:false
+         Clean & Import knowledge base
+    
+      #button-apply
+         = f.submit 'Apply' , onchange: "this.form.submit()",class:"btn btn-primary"
+
+%a.close{:href => "#"} ×

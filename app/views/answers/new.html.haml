@@ -6,10 +6,9 @@
 
   %ul.nav.nav-tabs{role: "tablist"}
     %li.nav-item
-      = link_to "Matched", "#matched", class: "nav-link disabled", "data-toggle": "tab", role: "tab"
-    %li.nav-item
       = link_to "Training", "#training", class: "nav-link active", "data-toggle": "tab", role: "tab"
-  
+    %li.nav-item
+      = link_to "Matched", "#matched", class: "nav-link disabled", "data-toggle": "tab", role: "tab"
   .tab-content
     #matched.tab-pane{role: "tabpanel"}
     #training.tab-pane{role: "tabpanel", class: "active"}
@@ -22,7 +21,7 @@
 
       %table.table
         %tbody.training
-          = form.simple_fields_for :questions, @questions do |q|
+          =  form.simple_fields_for :questions, @questions do |q|
             = render 'question_fields', f: q, tab: "training"
       .links
         = link_to_add_association form, :questions, data: {"association-insertion-node": "tbody.training", "association-insertion-method": "append"}, :render_options => { :locals => {tab: "training" }}, class: "btn btn-secondary" do

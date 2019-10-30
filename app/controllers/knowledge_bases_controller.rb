@@ -180,7 +180,7 @@ class KnowledgeBasesController < ApplicationController
 
   private
   def knowledge_basis_params
-    params.require(:knowledge_basis).permit(:name, :verify_token, :access_token, :classifier, :threshold, :feedback_question, :language_code, :allow_anonymous_access, :widget_input_placeholder_text, :widget_submit_button_text, :allow_facebook_messenger_access, :widget_css, :waiting_message, :welcome_message, :request_for_user_value_message)
+    params.require(:knowledge_basis).permit(:name, :verify_token, :access_token, :classifier, :threshold, :feedback_question, :language_code, :allow_anonymous_access, :widget_input_placeholder_text, :widget_submit_button_text, :allow_facebook_messenger_access, :widget_css, :properties,:waiting_message, :welcome_message, :request_for_user_value_message)
   end
 
   def find_knowledge_basis

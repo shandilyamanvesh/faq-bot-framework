@@ -39,7 +39,7 @@ class Answer < ApplicationRecord
     CSV.generate(col_sep: ";") do |csv|
       all.each do |answer|
       	answer.questions.each do |question|
-          csv << [question.text, answer.text]
+          csv << [question.text, answer.text,question.flag]
         end
       end
     end

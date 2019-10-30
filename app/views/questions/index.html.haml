@@ -46,5 +46,4 @@
           .card-header
             Widget code
           %div{style: "padding: 10px"}
-            = text_area_tag :embed_code, "<iframe width=\"250\" height=\"300\" src=\"#{knowledge_basis_widget_url(@knowledge_basis.hash_id)}\" frameborder=\"0\"></iframe>", class: "form-control", style: "font-size:   12px;height:100px;", onclick: "this.select();", readonly: true
-            
+            = text_area_tag :embed_code, "<iframe width=\"250\" height=\"300\" src=\"#{knowledge_basis_widget_url(@knowledge_basis.hash_id)}\" frameborder=\"0\"></iframe>", class: "form-control", style: "font-size:12px;height:100px;", onclick: "this.select();", readonly: true

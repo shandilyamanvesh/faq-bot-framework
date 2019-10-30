@@ -1,3 +1,4 @@
+
 %tr.nested-fields
   %td
     = f.input :text, as: :string, label: false
@@ -5,6 +6,22 @@
     = f.input :answer_id, as: "hidden", input_html: {class: "answer-id"}
     = f.input :confirmed_at, as: "hidden", input_html: {class: "confirmed_at", value: tab == "training" ? DateTime.now : f.object.confirmed_at}
     = f.input :knowledge_basis_id, as: "hidden", input_html: {value: @knowledge_basis.id}
+    %table
+      %tr
+        %td
+          %p Select Type:
+        %td{style: "width: 100px"}
+          .radio
+            %label
+              = f.radio_button(:flag, "train" ,checked: f.object.flag == "train")
+              Train
+        
+        %td    
+          .radio
+            %label
+              = f.radio_button(:flag, "test" ,checked: f.object.flag == "test")
+              Test
+  
   %td{style: "width: 100px"}= f.input :probability, label: false, input_html: {class: "probability", value: tab == "training" ? 1.0 : f.object.probability, title: "Probability"}, readonly: true
   %td{style: "width: 90px"}
     %span.input-group-btn

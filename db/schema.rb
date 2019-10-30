@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_26_131833) do
+ActiveRecord::Schema.define(version: 2019_10_14_113726) do
 
   create_table "answer_placeholder_embeddings", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "answer_id"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.index ["placeholder_id"], name: "index_answer_placeholder_embeddings_on_placeholder_id"
   end
 
-  create_table "answers", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "answers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "knowledge_basis_id"
     t.text "text"
     t.integer "created_by"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.index ["knowledge_basis_id"], name: "index_answers_on_knowledge_basis_id"
   end
 
-  create_table "custom_loggers", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "custom_loggers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "started_at"
     t.datetime "completed_at"
     t.string "namespace"
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "knowledge_bases", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "knowledge_bases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "welcome_message"
     t.string "verify_token"
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.index ["classifier"], name: "index_knowledge_bases_on_classifier"
   end
 
-  create_table "knowledge_bases_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "knowledge_bases_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "knowledge_basis_id", null: false
     t.bigint "user_id", null: false
     t.index ["knowledge_basis_id", "user_id"], name: "index_knowledge_bases_users_on_knowledge_basis_id_and_user_id"
@@ -115,7 +115,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.index ["replaceable_type", "replaceable_id"], name: "index_placeholders_on_replaceable_type_and_replaceable_id"
   end
 
-  create_table "questions", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "questions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "text"
     t.integer "answer_id"
     t.float "probability"
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.datetime "replied_at"
     t.integer "user_session_id"
     t.integer "knowledge_basis_id"
+    t.string "flag", default: "train", null: false
     t.index ["answer_id"], name: "index_questions_on_answer_id"
     t.index ["assigned_by"], name: "index_questions_on_assigned_by"
     t.index ["probability"], name: "index_questions_on_probability"
@@ -140,8 +141,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "answer_id"
-    t.index ["knowledge_basis_id"], name: "index_user_sessions_on_knowledge_basis_id"
-    t.index ["questioner_id"], name: "index_user_sessions_on_questioner_id"
+    t.index ["questioner_id", "knowledge_basis_id"], name: "index_user_sessions_on_questioner_id_and_knowledge_basis_id", unique: true
   end
 
   create_table "user_values", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -154,7 +154,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_131833) do
     t.string "prompt"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

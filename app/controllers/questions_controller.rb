@@ -49,7 +49,7 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:text, :answer_id, :probability, :created_by, :confirmed_at, :user_session_id, :knowledge_basis_id, answer_attributes: [:id, :_destroy])
+    params.require(:question).permit(:text, :answer_id, :probability, :created_by, :confirmed_at, :user_session_id, :knowledge_basis_id, :flag, answer_attributes: [:id, :_destroy])
   end
 
   def find_knowledge_basis

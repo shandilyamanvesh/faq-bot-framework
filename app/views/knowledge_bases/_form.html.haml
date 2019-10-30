@@ -36,7 +36,13 @@
       = form.input :welcome_message
       = form.input :widget_input_placeholder_text, label: "Placeholder text"
       = form.input :widget_submit_button_text, label: "Submit button label"
-      = form.input :widget_css, label: "Custom CSS", input_html: { rows: "5" }  
+      = form.input :widget_css, label: "Custom CSS", input_html: { rows: "5" }
+
+  .card.mb-3
+    .card-header
+      More info
+    .card-body
+      = form.input :properties, label: "json({key: value})", input_html: { rows: "5" }
 
   = form.submit "Save", class: "btn btn-primary"
   = link_to "Cancel", @knowledge_basis.persisted? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_bases_path, class: "btn"

@@ -15,18 +15,18 @@
   
   %ul.nav.nav-tabs{role: "tablist"}
     %li.nav-item
-      = link_to "#matched", class: "nav-link #{@tab != 'training' ? 'active' : nil}", "data-toggle": "tab", role: "tab" do
-        Matched
-        %span.badge.badge-dark.matched
-          = @answer.questions.matched.count
-    %li.nav-item
-      = link_to "#training", class: "nav-link #{@tab == 'training' ? 'active' : nil}", "data-toggle": "tab", role: "tab" do
+      = link_to "#training", class: "nav-link #{@tab != 'training' ? 'active' : nil}", "data-toggle": "tab", role: "tab" do
         Training
         %span.badge.badge-dark.training
           = @answer.questions.training.count
+    %li.nav-item
+      = link_to "#matched", class: "nav-link #{@tab == 'training' ? 'active' : nil}", "data-toggle": "tab", role: "tab" do
+        Matched
+        %span.badge.badge-dark.matched
+          = @answer.questions.matched.count
   
   .tab-content
-    #matched.tab-pane{role: "tabpanel", class: @tab != 'training' ? 'active' : nil}
+    #matched.tab-pane{role: "tabpanel", class: @tab == 'training' ? 'active' : nil}
       %br
       
       %table.table
@@ -38,7 +38,7 @@
           %h4 All matched!
         %p.mb-0 Nothing to do here.
       
-    #training.tab-pane{role: "tabpanel", class: @tab == 'training' ? 'active' : nil}
+    #training.tab-pane{role: "tabpanel", class: @tab != 'training' ? 'active' : nil}
       %br
 
       .training.empty.alert.alert-warning{class: form.object.questions.training.count > 0 ? "collapse" : nil}

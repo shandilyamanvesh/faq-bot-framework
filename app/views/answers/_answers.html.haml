@@ -20,7 +20,9 @@
       %br
       - if can? :import, Answer
         = simple_form_for(@knowledge_basis, url: import_knowledge_basis_answers_path, html: { method: :post }) do |form|
-          = form.file_field :file, accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" , style: "  display: none", onchange: "this.form.submit()"
-          = link_to "Import knowledge base", "#", onclick: "$('#knowledge_basis_file').trigger('click')", class: "btn btn-primary", style: "width: 100%"
+          %a.btn.btn-primary.list-group{:href => "#popup1"} Import knowledge base
+          #popup1.overlay
+            .popup
+              = render 'popup_fields', :f => form
       %br
-      = link_to "Export knowledge base", export_knowledge_basis_answers_path(@knowledge_basis, format: "csv"), class: "btn btn-primary", style: "width: 100%"
+      = link_to "Export knowledge base", export_knowledge_basis_answers_path(@knowledge_basis, format: "csv"),  class: "btn btn-primary", style: "width: 100%"
