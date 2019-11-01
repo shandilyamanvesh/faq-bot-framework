@@ -10,6 +10,7 @@ class KnowledgeBasis < ApplicationRecord
 
 	validates :name, presence: true, uniqueness: true
   validates :hash_id, presence: true, uniqueness: true
+  validate :json_format
 
   before_validation :set_hash_id, on: :create
 
@@ -58,6 +59,10 @@ class KnowledgeBasis < ApplicationRecord
     name.downcase.gsub(/[^0-9A-Z]/i, '_')
   end
 
+  def json_format
+    return if properties.nil?
+    errors.add(:properties,"Json format is not correct.") unless properties.is_json?
+  end
   private
 
   def set_hash_id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_14_113726) do
+ActiveRecord::Schema.define(version: 2019_10_30_133005) do
 
   create_table "answer_placeholder_embeddings", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "answer_id"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 2019_10_14_113726) do
     t.text "widget_css"
     t.text "waiting_message"
     t.string "request_for_user_value_message", default: "What is your [[user_value]]?"
+    t.json "properties"
     t.index ["classifier"], name: "index_knowledge_bases_on_classifier"
   end
 

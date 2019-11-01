@@ -29,7 +29,10 @@ class KnowledgeBasesController < ApplicationController
 
   def create
     @knowledge_basis = KnowledgeBasis.create(knowledge_basis_params)
-    if @knowledge_basis.save
+    if @knowledge_basis.errors.any?
+      flash[:error]= @knowledge_basis.errors.full_messages.join("\n")
+      render 'edit'
+    elsif @knowledge_basis.save
       redirect_to knowledge_bases_url, notice: "Sucessfully created '#{@knowledge_basis.name}'"
     else
       render 'edit'
@@ -70,6 +73,7 @@ class KnowledgeBasesController < ApplicationController
       end
       redirect_to knowledge_basis_answers_path(@knowledge_basis), notice: "Sucessfully updated '#{@knowledge_basis.name}'"
     else
+      flash[:error]= @knowledge_basis.errors.full_messages.join("\n")
       render 'edit'
     end
   end

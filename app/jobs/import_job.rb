@@ -28,7 +28,7 @@ class ImportJob < ApplicationJob
           a = ActionView::Base.full_sanitizer.sanitize(sheet.cell(i, 2)).truncate(65535)
           b = ActionView::Base.full_sanitizer.sanitize(sheet.cell(i, 3)).truncate(65535)
           next if a.blank? # skip if line empty
-          question = Question.new(text: q, knowledge_basis: knowledge_basis, confirmed_at: DateTime.now)
+          question = Question.new(text: q,flag: b, knowledge_basis: knowledge_basis, confirmed_at: DateTime.now)
           answer = knowledge_basis.answers.where(text: a).first_or_create
           answer.created_by = current_user_id if answer.new_record?
           answer.questions.push(question)

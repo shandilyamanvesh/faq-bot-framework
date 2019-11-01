@@ -42,7 +42,7 @@
     .card-header
       More info
     .card-body
-      = form.input :properties, label: "json({key: value})", input_html: { rows: "5" }
+      = form.input :properties, label: "Properties (json)", input_html: { rows: "5" }
 
   = form.submit "Save", class: "btn btn-primary"
   = link_to "Cancel", @knowledge_basis.persisted? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_bases_path, class: "btn"
