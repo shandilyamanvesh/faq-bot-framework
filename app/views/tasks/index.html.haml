@@ -1,32 +1,36 @@
+
 .container
-  %h3 Knowledge bases
+  %h3 Tasks List
   .row
     .col-10
-      - if @knowledge_bases.blank?
+      - if @tasks.blank?
         .alert.alert-warning
           .alert-heading 
-            %h3 No knowledge bases available yet
+            %h3 No Tasks available yet
           %p.mb-0 Please contact an admin user for help.
       - else
 
         %table.table.table-striped
           %thead
             %tr
-              %th{style: "min-width:200px"} Name
+              %th{style: "min-width:200px"} Task Name
+              %th Code
+              %th Properties
               %th
           %tbody
-            - @knowledge_bases.each do |kb|
+            - @tasks.each do |kb|
               %tr
-                %td= link_to kb.name, knowledge_basis_questions_path(kb)
+                %td= kb.name
+                %td= kb.code
+                %td= kb.properties
                 %td.pull-right
                   - if can? :edit, kb
-                    = link_to edit_knowledge_basis_path(kb) do
+                    = link_to edit_task_path(kb) do
                       %i.fa.fa-cog
 
     .col-2
       .list-group
         - if can? :create, KnowledgeBasis
-          = link_to new_knowledge_basis_path, class: "btn btn-primary" do
+          = link_to new_task_path, class: "btn btn-primary" do
             %i.fa.fa-plus-circle
             Add
-

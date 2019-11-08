@@ -7,6 +7,7 @@ class KnowledgeBasis < ApplicationRecord
   has_many :global_values, dependent: :destroy
   has_many :user_values, dependent: :destroy
   has_many :external_api_connections, dependent: :destroy
+  belongs_to :task
 
 	validates :name, presence: true, uniqueness: true
   validates :hash_id, presence: true, uniqueness: true
@@ -60,7 +61,7 @@ class KnowledgeBasis < ApplicationRecord
   end
 
   def json_format
-    return if properties.nil?
+    return if properties.nil? || properties.empty?
     errors.add(:properties,"Json format is not correct.") unless properties.is_json?
   end
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_30_133005) do
+ActiveRecord::Schema.define(version: 2019_11_07_081957) do
 
   create_table "answer_placeholder_embeddings", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "answer_id"
@@ -96,7 +96,9 @@ ActiveRecord::Schema.define(version: 2019_10_30_133005) do
     t.text "waiting_message"
     t.string "request_for_user_value_message", default: "What is your [[user_value]]?"
     t.json "properties"
+    t.bigint "task_id"
     t.index ["classifier"], name: "index_knowledge_bases_on_classifier"
+    t.index ["task_id"], name: "index_knowledge_bases_on_task_id"
   end
 
   create_table "knowledge_bases_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -132,6 +134,15 @@ ActiveRecord::Schema.define(version: 2019_10_30_133005) do
     t.index ["assigned_by"], name: "index_questions_on_assigned_by"
     t.index ["probability"], name: "index_questions_on_probability"
     t.index ["user_session_id"], name: "index_questions_on_user_session_id"
+  end
+
+  create_table "tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.json "properties"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_tasks_on_code", unique: true
   end
 
   create_table "user_sessions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -173,4 +184,5 @@ ActiveRecord::Schema.define(version: 2019_10_30_133005) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "knowledge_bases", "tasks"
 end

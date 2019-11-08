@@ -36,7 +36,7 @@ class Answer < ApplicationRecord
   end
 
 	def self.to_csv
-    CSV.generate(col_sep: ";") do |csv|
+    CSV.generate(col_sep: ",") do |csv|
       all.each do |answer|
       	answer.questions.each do |question|
           csv << [question.text, answer.text,question.flag]

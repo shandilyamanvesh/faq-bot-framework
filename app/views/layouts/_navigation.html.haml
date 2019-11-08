@@ -43,6 +43,7 @@
           %li.nav-item.dropdown
             = link_to "Administration", "#", "id": "navbarDropdownMenuLink", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false", class: "nav-link dropdown-toggle"
             .dropdown-menu{"aria-labelledby": "navbarDropdownMenuLink"}
+              =link_to "Tasks",tasks_path,class: "dropdown-item"
               = link_to "Knowledge bases", knowledge_bases_path, class: "dropdown-item"
               = link_to "Users", admin_users_path, class: "dropdown-item"
               = link_to "Analytics", knowledge_basis_analytics_path(@knowledge_basis), class: "dropdown-item" if @knowledge_basis.present? && @knowledge_basis.persisted?

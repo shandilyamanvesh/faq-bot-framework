@@ -1,5 +1,4 @@
 = simple_form_for(knowledge_basis, html: { class: 'form-horizontal' }) do |form|
-  
   = form.input :name, required: false
   = form.input :language_code, label: "Language", collection: [["English", "en"], ["French", "fr"], ["German", "de"], ["Swedish", "sv"]], include_blank: false
   .card.mb-3
@@ -44,6 +43,11 @@
     .card-body
       = form.input :properties, label: "Properties (json)", input_html: { rows: "5" }
 
+  .card.mb-3
+    .card-header
+      Select Task
+    .card-body
+      = form.input :task_id, label: "Task", collection: Task.all.map { |t| [t.name, t.id] }, include_blank: false
   = form.submit "Save", class: "btn btn-primary"
   = link_to "Cancel", @knowledge_basis.persisted? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_bases_path, class: "btn"
 

@@ -1,7 +1,7 @@
 class KnowledgeBasesController < ApplicationController
   include Facebook
-  
-  # expose Facebook webhook 
+
+  # expose Facebook webhook
   skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget]
   load_and_authorize_resource except: [:webhook, :receive_message, :widget]
   skip_before_action :verify_authenticity_token, only: [:webhook, :receive_message, :widget]
@@ -14,9 +14,8 @@ class KnowledgeBasesController < ApplicationController
 
   def index
     @knowledge_bases = current_user.role == "admin" ? KnowledgeBasis.all : current_user.knowledge_bases
-
     if current_user.role != "admin" && @knowledge_bases.present?
-      redirect_to knowledge_basis_answers_path(@knowledge_bases.first) 
+      redirect_to knowledge_basis_answers_path(@knowledge_bases.first)
     end
   end
 
@@ -37,7 +36,7 @@ class KnowledgeBasesController < ApplicationController
     else
       render 'edit'
     end
-  end	
+  end
 
   def update
     if @knowledge_basis.update(knowledge_basis_params)
@@ -61,17 +60,17 @@ class KnowledgeBasesController < ApplicationController
 
         # threshold was lowered
         if [old_threshold, new_threshold].max == old_threshold
-          @knowledge_basis.questions.not_training.unmatched.each do |q| 
+          @knowledge_basis.questions.not_training.unmatched.each do |q|
             q.find_matching_answer
             q.save
           end
-        # threshold was increased
+          # threshold was increased
         else
           # reset answers for non-confirmed questions below the new threshold
           @knowledge_basis.questions.not_training.where(["probability < ?", new_threshold]).update_all(answer_id: nil, probability: nil)
         end
       end
-      redirect_to knowledge_basis_answers_path(@knowledge_basis), notice: "Sucessfully updated '#{@knowledge_basis.name}'"
+      redirect_to knowledge_basis_answers_url, notice: "Sucessfully updated '#{@knowledge_basis.name}'"
     else
       flash[:error]= @knowledge_basis.errors.full_messages.join("\n")
       render 'edit'
@@ -104,7 +103,7 @@ class KnowledgeBasesController < ApplicationController
 
   def webhook
     @knowledge_basis = KnowledgeBasis.find(params[:knowledge_basis_id])
-    
+
     render plain: "Not found", status: 404 and return if (@knowledge_basis.blank? || !@knowledge_basis.allow_facebook_messenger_access)
     if params["hub.mode"] == "subscribe" && params["hub.challenge"]
       if params["hub.verify_token"] == @knowledge_basis.verify_token
@@ -140,12 +139,12 @@ class KnowledgeBasesController < ApplicationController
             q = user_session.most_recent_question
             q.send_response_to_user
 
-          # new question
+            # new question
           else
             @knowledge_basis.questions.create!(text: text, user_session: user_session, probability: nil)
           end
-  
-        # handle feedback loop
+
+          # handle feedback loop
         elsif (event[:postback] && (payload = event[:postback][:payload]))
           json = JSON.parse(payload)
           question_id = json["question_id"].to_i
@@ -158,7 +157,7 @@ class KnowledgeBasesController < ApplicationController
               question.reject!
             end
           end
-  
+
         end
       end
     end
@@ -174,17 +173,17 @@ class KnowledgeBasesController < ApplicationController
 
   def export
     respond_to do |format|
-      format.csv { 
+      format.csv {
         send_data @knowledge_basis.questions.to_csv,
         filename: "logs_#{@knowledge_basis.to_identifier}_#{Time.now.to_i}.csv",
-        type: 'text/csv; charset=utf-8' 
+        type: 'text/csv; charset=utf-8'
       }
     end
   end
 
   private
   def knowledge_basis_params
-    params.require(:knowledge_basis).permit(:name, :verify_token, :access_token, :classifier, :threshold, :feedback_question, :language_code, :allow_anonymous_access, :widget_input_placeholder_text, :widget_submit_button_text, :allow_facebook_messenger_access, :widget_css, :properties,:waiting_message, :welcome_message, :request_for_user_value_message)
+    params.require(:knowledge_basis).permit(:name, :verify_token, :access_token, :classifier, :threshold, :feedback_question, :language_code, :allow_anonymous_access, :widget_input_placeholder_text, :widget_submit_button_text, :allow_facebook_messenger_access, :widget_css, :properties,:task_id,:waiting_message, :welcome_message, :request_for_user_value_message)
   end
 
   def find_knowledge_basis

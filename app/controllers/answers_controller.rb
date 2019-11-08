@@ -87,7 +87,7 @@ class AnswersController < ApplicationController
         @knowledge_basis.answers.destroy_all
       end
       # normal import
-      uploaded_io = params[:knowledge_basis][:file]
+      uploaded_io= params[:knowledge_basis][:file]
       File.open(Rails.root.join('tmp',uploaded_io.original_filename), 'wb') do |file|
         file.write(uploaded_io.read)
       end
