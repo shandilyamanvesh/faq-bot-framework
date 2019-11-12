@@ -2,11 +2,11 @@ class KnowledgeBasesController < ApplicationController
   include Facebook
 
   # expose Facebook webhook
-  skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget]
-  load_and_authorize_resource except: [:webhook, :receive_message, :widget]
-  skip_before_action :verify_authenticity_token, only: [:webhook, :receive_message, :widget]
+  skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget, :show, :list]
+  load_and_authorize_resource except: [:webhook, :receive_message, :widget, :show, :list]
+  skip_before_action :verify_authenticity_token, only: [:webhook, :receive_message, :widget, :show, :list]
 
-  skip_authorization_check only: [:index, :edit, :update, :webhook, :receive_message, :widget]
+  skip_authorization_check only: [:index, :edit, :update, :webhook, :receive_message, :widget, :show, :list]
 
   before_action :find_knowledge_basis, only: [:edit, :update, :destroy, :train, :reset, :clear_dashboard, :export, :receive_message]
 
@@ -16,6 +16,53 @@ class KnowledgeBasesController < ApplicationController
     @knowledge_bases = current_user.role == "admin" ? KnowledgeBasis.all : current_user.knowledge_bases
     if current_user.role != "admin" && @knowledge_bases.present?
       redirect_to knowledge_basis_answers_path(@knowledge_bases.first)
+    end
+  end
+
+  def show
+    @knowledge_basis = KnowledgeBasis.find_by_id(params[:id])
+    if @knowledge_basis
+      render json:{
+        knowledge_basis:{
+          id: @knowledge_basis.id,
+          name: @knowledge_basis.name,
+          classifier:@knowledge_basis.classifier,
+          threshold:@knowledge_basis.threshold,
+          language_code:@knowledge_basis.language_code,
+          properties:@knowledge_basis.properties,
+          task: {
+            id:@knowledge_basis.task.id,
+            code:@knowledge_basis.task.code,
+            properties:@knowledge_basis.task.properties,
+            name:@knowledge_basis.task.name
+          }
+        }
+      }, status: 200
+    else
+      render json: {
+        error: "No knowledge base found",
+        status: 404
+      }, status: 404
+    end
+  end
+
+  def list
+    @knowledge_basis = KnowledgeBasis.find_by_id(params[:knowledge_basis_id])
+    if @knowledge_basis
+      render json: {
+        data: @knowledge_basis.questions.map do |q|
+          {
+            question: q.text,
+            answer: q.answer.text,
+            type: q.flag
+          }
+        end
+      }, status: 200
+    else
+      render json: {
+        error: "No knowledge base found",
+        status: 404
+      }, status: 404
     end
   end
 

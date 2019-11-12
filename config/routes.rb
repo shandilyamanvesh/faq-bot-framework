@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     # Facebook webhook
     get  'webhook', to: :webhook
     post 'webhook', to: 'knowledge_bases#receive_message'
+
+    get  'list',    to: 'knowledge_bases#list'
   end
 
   resources :tasks
