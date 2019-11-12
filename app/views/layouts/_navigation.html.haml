@@ -27,7 +27,7 @@
 
       %ul.navbar.navbar-nav
         - if @knowledge_basis.present? && @knowledge_basis.persisted?
-          - training_in_progress = TrainClassifierJob::active?
+          - training_in_progress = @knowledge_basis.training
           %li.nav-item{style: "padding-right: 5px"}
 
             = button_to (training_in_progress ? "Training ..." : "Train classifier now!"), knowledge_basis_train_path(@knowledge_basis), method: :post, class: "btn btn-primary", id: "train_classifier_button", style: "width: 180px", disabled: training_in_progress

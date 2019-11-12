@@ -2,11 +2,11 @@ class KnowledgeBasesController < ApplicationController
   include Facebook
 
   # expose Facebook webhook
-  skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget, :show, :list]
-  load_and_authorize_resource except: [:webhook, :receive_message, :widget, :show, :list]
-  skip_before_action :verify_authenticity_token, only: [:webhook, :receive_message, :widget, :show, :list]
+  skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget, :show, :list, :update_status]
+  load_and_authorize_resource except: [:webhook, :receive_message, :widget, :show, :list, :update_status]
+  skip_before_action :verify_authenticity_token, only: [:webhook, :receive_message, :widget, :show, :list, :update_status]
 
-  skip_authorization_check only: [:index, :edit, :update, :webhook, :receive_message, :widget, :show, :list]
+  skip_authorization_check only: [:index, :edit, :update, :webhook, :receive_message, :widget, :show, :list, :update_status]
 
   before_action :find_knowledge_basis, only: [:edit, :update, :destroy, :train, :reset, :clear_dashboard, :export, :receive_message]
 
@@ -30,6 +30,7 @@ class KnowledgeBasesController < ApplicationController
           threshold:@knowledge_basis.threshold,
           language_code:@knowledge_basis.language_code,
           properties:@knowledge_basis.properties,
+          training: @knowledge_basis.training,
           task: {
             id:@knowledge_basis.task.id,
             code:@knowledge_basis.task.code,
@@ -58,6 +59,21 @@ class KnowledgeBasesController < ApplicationController
           }
         end
       }, status: 200
+    else
+      render json: {
+        error: "No knowledge base found",
+        status: 404
+      }, status: 404
+    end
+  end
+
+  def update_status
+    @knowledge_basis = KnowledgeBasis.find_by_id(params[:knowledge_basis_id])
+    if @knowledge_basis && params[:knowledge_basis]
+      @knowledge_basis.update({
+                                training: params[:knowledge_basis][:training]
+      })
+      render json: { status: 200 }, status: 200
     else
       render json: {
         error: "No knowledge base found",
@@ -145,7 +161,9 @@ class KnowledgeBasesController < ApplicationController
   end
 
   def train
-    TrainClassifierJob.perform_later @knowledge_basis, current_user.id
+    @knowledge_basis.update({training: true})
+    redirect_to knowledge_basis_questions_path(@knowledge_basis), notice: "Training started"
+    #TrainClassifierJob.perform_later @knowledge_basis, current_user.id
   end
 
   def webhook
@@ -230,7 +248,26 @@ class KnowledgeBasesController < ApplicationController
 
   private
   def knowledge_basis_params
-    params.require(:knowledge_basis).permit(:name, :verify_token, :access_token, :classifier, :threshold, :feedback_question, :language_code, :allow_anonymous_access, :widget_input_placeholder_text, :widget_submit_button_text, :allow_facebook_messenger_access, :widget_css, :properties,:task_id,:waiting_message, :welcome_message, :request_for_user_value_message)
+    params.require(:knowledge_basis).permit(
+      :name,
+      :verify_token,
+      :access_token,
+      :classifier,
+      :threshold,
+      :feedback_question,
+      :language_code,
+      :allow_anonymous_access,
+      :widget_input_placeholder_text,
+      :widget_submit_button_text,
+      :allow_facebook_messenger_access,
+      :widget_css,
+      :properties,
+      :task_id,
+      :waiting_message,
+      :welcome_message,
+      :request_for_user_value_message,
+      :training
+    )
   end
 
   def find_knowledge_basis

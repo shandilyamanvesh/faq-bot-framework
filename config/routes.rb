@@ -22,7 +22,8 @@ Rails.application.routes.draw do
     get  'webhook', to: :webhook
     post 'webhook', to: 'knowledge_bases#receive_message'
 
-    get  'list',    to: 'knowledge_bases#list'
+    get 'list',         to: 'knowledge_bases#list'
+    post 'updatestatus', to: 'knowledge_bases#update_status'
   end
 
   resources :tasks
