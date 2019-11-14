@@ -1,5 +1,6 @@
 class KnowledgeBasesController < ApplicationController
   include Facebook
+  include KnowledgeBasesHelper
 
   # expose Facebook webhook
   skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget, :show, :list, :update_status]
@@ -31,6 +32,7 @@ class KnowledgeBasesController < ApplicationController
           language_code:@knowledge_basis.language_code,
           properties:@knowledge_basis.properties,
           training: @knowledge_basis.training,
+          data_model:@knowledge_basis.data_model,
           task: {
             id:@knowledge_basis.task.id,
             code:@knowledge_basis.task.code,
@@ -133,7 +135,7 @@ class KnowledgeBasesController < ApplicationController
           @knowledge_basis.questions.not_training.where(["probability < ?", new_threshold]).update_all(answer_id: nil, probability: nil)
         end
       end
-      redirect_to knowledge_basis_answers_url, notice: "Sucessfully updated '#{@knowledge_basis.name}'"
+      redirect_to knowledge_bases_url, notice: "Sucessfully updated '#{@knowledge_basis.name}'"
     else
       flash[:error]= @knowledge_basis.errors.full_messages.join("\n")
       render 'edit'
@@ -266,7 +268,8 @@ class KnowledgeBasesController < ApplicationController
       :waiting_message,
       :welcome_message,
       :request_for_user_value_message,
-      :training
+      :training,
+      :data_model
     )
   end
 

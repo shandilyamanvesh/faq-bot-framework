@@ -48,6 +48,12 @@
       Select Task
     .card-body
       = form.input :task_id, label: "Task", collection: Task.all.map { |t| [t.name, t.id] }, include_blank: false
+
+  .card.mb-3
+    .card-header
+      data source
+    .card-body
+      = form.input :data_model, label: "data source", collection: data_sources.map { | d | [ d[:name], d[:code] ]}, include_blank: false
   = form.submit "Save", class: "btn btn-primary"
   = link_to "Cancel", @knowledge_basis.persisted? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_bases_path, class: "btn"
 

@@ -29,7 +29,24 @@ module FaqBotFramework
     config.autoload_paths += %W(#{config.root}/lib)
     config.eager_load_paths += %W(#{config.root}/lib)
 
-    config.time_zone = 'Europe/Paris'
+    def settings_hash
+      base = config_hash_from_file('settings')
+      dev  = config_hash_from_file('settings.dev')
+      base.merge(dev)
+    end
+
+    def config_hash_from_file(name)
+      YAML.safe_load(File.read("config/#{name}.yml"))
+    rescue Errno::ENOENT
+      {}
+    end
+
+    # Load app settings
+    settings_hash.each do |name, value|
+      value = Rails.root.join(value) if /.+_dir/.match?(name) # set abs paths
+      value.deep_symbolize_keys! if value.is_a?(Hash)
+      config.send("#{name}=", value)
+    end
 
     if ENV["RAILS_LOG_TO_STDOUT"].present?
       logger           = ActiveSupport::Logger.new(STDOUT)

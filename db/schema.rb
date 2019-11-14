@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_12_082908) do
+ActiveRecord::Schema.define(version: 2019_11_13_123511) do
 
   create_table "answer_placeholder_embeddings", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "answer_id"
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_082908) do
     t.json "properties"
     t.bigint "task_id"
     t.boolean "training", default: false
+    t.string "data_model", null: false
     t.index ["classifier"], name: "index_knowledge_bases_on_classifier"
     t.index ["task_id"], name: "index_knowledge_bases_on_task_id"
   end
