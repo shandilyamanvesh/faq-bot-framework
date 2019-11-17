@@ -48,18 +48,18 @@ module FaqBotFramework
       config.send("#{name}=", value)
     end
 
-    if ENV["RAILS_LOG_TO_STDOUT"].present?
-      logger           = ActiveSupport::Logger.new(STDOUT)
-      logger.formatter = config.log_formatter
-      config.logger    = logger
-    else
-      rails_log_dir    = ENV["RAILS_LOG_DIR"] || "/home/ubuntu/LogFiles"
-      FileUtils.mkdir_p rails_log_dir
-      logfile          = File.join(rails_log_dir, "#{Rails.env}.log")
-      logger           = ActiveSupport::Logger.new(logfile)
-      logger.formatter = config.log_formatter
-      config.logger    = logger
-    end
+    # if ENV["RAILS_LOG_TO_STDOUT"].present?
+    #   logger           = ActiveSupport::Logger.new(STDOUT)
+    #   logger.formatter = config.log_formatter
+    #   config.logger    = logger
+    # else
+    #   rails_log_dir    = ENV["RAILS_LOG_DIR"] || "/home/ubuntu/LogFiles"
+    #   FileUtils.mkdir_p rails_log_dir
+    #   logfile          = File.join(rails_log_dir, "#{Rails.env}.log")
+    #   logger           = ActiveSupport::Logger.new(logfile)
+    #   logger.formatter = config.log_formatter
+    #   config.logger    = logger
+    # end
 
     config.classifiers = config_for(:classifiers)
   end
