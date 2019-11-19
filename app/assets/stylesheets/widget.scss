@@ -1,10 +1,15 @@
 #chat_form {
 	margin-bottom: 0;
-	font-size: 12px;	
+	font-size: 12px;
+	position: fixed;
+	bottom: 0;
+	background: white;
+	padding-top: 10px;
 }
 
 #chat_form #messages {
 	font-size: 12px;
+	margin-bottom: 100px;
 }
 
 #chat_form button {

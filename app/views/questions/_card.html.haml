@@ -2,9 +2,6 @@
   .card-header
     - if q.user_session && q.user_session.questioner_name.present?
       .small.pull-left= q.user_session.questioner_name
-    - else
-      %span.badge.badge-dark
-        Anonymous
     .small.pull-right= q.created_at.strftime("%e %B %Y, %H:%M")
   .card-body
     %p.card-text
@@ -14,8 +11,6 @@
     = simple_form_for([knowledge_basis, q], remote: true, html: { class: 'form-horizontal', onsubmit: "location.reload();" }) do |f|
       = f.association :answer, label: false, input_html: {class: "select2"}, collection: knowledge_basis.answers.map{|a| [(a == q.answer ? "[#{q.probability}] " : "") + a.text.truncate(100), a.id]}
       = f.input :confirmed_at, as: :hidden, input_html: { value: DateTime.now }
-      - if q.matched?
-        = f.submit "Approve", class: "btn btn-success"
     
       - if user.can?(:create, Answer.new(knowledge_basis: knowledge_basis))
         = link_to new_knowledge_basis_answer_path(knowledge_basis, question_ids: [q.id]), class: "btn btn-primary" do

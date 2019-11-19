@@ -1,0 +1,22 @@
+= simple_form_for([knowledge_basis, q], remote: true, html: { class: 'form-horizontal', onsubmit: "location.reload();" }) do |f|
+	%em= "Questions : "+"#{q.text}"
+
+	= f.association :answer, label: false, collection:knowledge_basis.answers.map{|a| [(a == q.answer ? "[#{q.probability}] " : "") + a.text.truncate(100), a.id]}
+	#center
+		%table
+			%tr
+				%td{style: "width: 100px"}
+					.radio
+						%label
+							= f.radio_button(:flag, "train" ,checked: f.object.flag == "train")
+							Train
+        
+				%td    
+					.radio
+						%label
+							= f.radio_button(:flag, "test" ,checked: f.object.flag == "test")
+							Test	
+	#button-apply
+		= f.input :confirmed_at, as: :hidden, input_html: { value: DateTime.now }
+		= f.submit "Approve" ,class: "btn btn-success"
+
