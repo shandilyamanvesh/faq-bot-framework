@@ -47,8 +47,11 @@ section {
 }
 
 .bg-light {
-  background-color: #c6d7e4 !important;
-  
+  background-color: #FEFEFE !important;
+  border:1px solid;
+  border-color:#F3F3F3;
+  border-right:none;
+  border-left:none;
 }
 
 .navbar-light .navbar-nav .nav-link {
