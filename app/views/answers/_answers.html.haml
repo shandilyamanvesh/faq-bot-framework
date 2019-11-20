@@ -1,7 +1,7 @@
 %br
 .row
   .col-9
-    %table.table.table-striped
+    %table.table.table-hover
       %body
       - @answers.each do |a|
         %tr
@@ -16,13 +16,14 @@
   .col-3
     .list-group
       = link_to new_knowledge_basis_answer_path(@knowledge_basis), class: "btn btn-primary" do
-        Create new answer
+        %i.fa.fa-plus-circle
+        Add
       %br
       - if can? :import, Answer
         = simple_form_for(@knowledge_basis, url: import_knowledge_basis_answers_path, html: { method: :post }) do |form|
-          %a.btn.btn-primary.list-group{:href => "#popup1"} Import knowledge base
+          %a.btn.btn-primary.list-group{:href => "#popup1"} Import 
           #popup1.overlay
             .popup
               = render 'popup_fields', :f => form
       %br
-      = link_to "Export knowledge base", export_knowledge_basis_answers_path(@knowledge_basis, format: "csv"),  class: "btn btn-primary", style: "width: 100%"
+      = link_to "Export ", export_knowledge_basis_answers_path(@knowledge_basis, format: "csv"),  class: "btn btn-primary", style: "width: 100%"

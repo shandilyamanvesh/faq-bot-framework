@@ -37,7 +37,7 @@ img {
 // apply styles to HTML elements
 // to make views framework-neutral
 main {
-  @extend .container;
+  @extend .container-fluid;
   margin-top: 100px; // accommodate the navbar
 }
 
@@ -63,7 +63,7 @@ a.navbar-brand h5 {
 }
 
 a.btn {
-  color: #064360;
+  color: white;
 }
 
 a.btn-danger.btn, a.btn-warning.btn {
@@ -71,12 +71,12 @@ a.btn-danger.btn, a.btn-warning.btn {
 }
 
 input.btn-primary.btn, input.btn-secondary.btn {
-  color: #064360;
+  color: white;
 }
 
-input.btn-primary, a.btn-primary, input.btn-secondary, a.btn-secondary {
-  background-color: white;
-  border-color: #064360;
+input.btn-primary, a.btn-primary, input.btn-secondary, a.btn-secondary{
+  background-color: #1F9AA5;
+  border-color: #9DDFE1;
 
 }
 
@@ -97,12 +97,25 @@ h3 {
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary,
 .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active, .open>.dropdown-toggle.btn-secondary {
-  background-color: #064360; 
+  background-color: #097A85; 
   color: white !important;
+  border-color: #097A85
 }
 
 .bg-light select {
   border-color: #064360 !important; 
+}
+
+.table tbody tr{
+  border-bottom: 1px solid #BCEEF3;
+}
+
+.table tbody td, .table th{
+  border: none;
+}
+
+.table.table-hover tbody tr:hover {
+  background-color: #E5F7F9; 
 }
 
 span.select2-container--default .select2-selection--single {

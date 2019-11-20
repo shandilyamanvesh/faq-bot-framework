@@ -1,9 +1,9 @@
-.container
+.container-fluid
   %h3 External API connections
   .row
     .col-9
 
-      %table.table.table-striped
+      %table.table.table-hover
         - @external_api_connections.each do |eac|
           %tr
             %td= eac.name
