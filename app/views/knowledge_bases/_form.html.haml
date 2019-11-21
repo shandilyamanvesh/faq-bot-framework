@@ -60,6 +60,6 @@
 
   - unless @knowledge_basis.new_record?
     .float-right
-      = link_to "Reset", knowledge_basis_reset_path(@knowledge_basis), method: :delete, style: "margin-right: 10px", class: "btn btn-warning", data: { confirm: "This action will delete all answers and questions, and also reset the classifier. Are you sure?" } if can? :reset, @knowledge_basis
-      = link_to "Delete", knowledge_basis_path(@knowledge_basis), method: :delete, class: "btn btn-danger", data: { confirm: "This action will completely delete the knowledge basis, including all answers and questions. Are you sure?" } if can? :destroy, @knowledge_basis
+      = link_to "", knowledge_basis_reset_path(@knowledge_basis), method: :delete, style: "margin-right: 10px", class: "fa fa-refresh fa-2x", data: { confirm: "This action will delete all answers and questions, and also reset the classifier. Are you sure?" } if can? :reset, @knowledge_basis
+      = link_to "", knowledge_basis_path(@knowledge_basis), method: :delete, class: "fa fa-trash fa-2x", data: { confirm: "This action will completely delete the knowledge basis, including all answers and questions. Are you sure?" } if can? :destroy, @knowledge_basis
 

@@ -86,7 +86,7 @@ input.btn-warning {
 }
 
 h3 {
-  margin: 10px 0px 40px 0px;
+  margin: 10px 0px 40px 7px;
 //  color: #064360;
 }
 
@@ -105,7 +105,15 @@ h3 {
 .bg-light select {
   border-color: #064360 !important; 
 }
-
+//icon
+a.fa.fa-trash.fa-lg, a.fa.fa-trash.fa-2x, a.fa.fa-refresh.fa-2x{
+  color: #239FAC;
+  margin-left:4px;
+  margin-right:4px;
+}
+.table tbody a{
+  color: #239FAC;
+}
 .table tbody tr{
   border-bottom: 1px solid #BCEEF3;
 }

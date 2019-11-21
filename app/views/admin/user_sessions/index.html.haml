@@ -19,4 +19,4 @@
               %td= us.questioner_id
               %td= us.questioner_name
               %td.pull-right
-                = link_to "Delete", admin_user_session_path(us), method: :delete, class: "btn btn-danger", data: { confirm: "Deleting the user session will destroy the associated questions, too. Are you sure?" }
+                = link_to "", admin_user_session_path(us), method: :delete, class: "fa fa-trash fa-lg", data: { confirm: "Deleting the user session will destroy the associated questions, too. Are you sure?" }
