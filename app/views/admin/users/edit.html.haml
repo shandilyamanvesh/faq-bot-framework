@@ -12,7 +12,6 @@
   
   - if can? :destroy, @user
     .pull-right
-
       = link_to "", admin_user_path(@user), method: :delete, class: "fa fa-trash fa-2x", data: { confirm: "You are about to delete this user account. Are you sure?" }
 
   - if can? :send_password_link, @user

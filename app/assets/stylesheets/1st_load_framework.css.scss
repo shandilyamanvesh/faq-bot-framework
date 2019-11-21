@@ -77,6 +77,7 @@ input.btn-primary.btn, input.btn-secondary.btn {
 input.btn-primary, a.btn-primary, input.btn-secondary, a.btn-secondary{
   background-color: #1F9AA5;
   border-color: #9DDFE1;
+  margin-bottom:7px;
 
 }
 
@@ -115,11 +116,16 @@ a.fa.fa-trash.fa-lg, a.fa.fa-trash.fa-2x, a.fa.fa-refresh.fa-2x{
   color: #239FAC;
 }
 .table tbody tr{
-  border-bottom: 1px solid #BCEEF3;
+  border-top: 1px solid #BCEEF3;
 }
 
 .table tbody td, .table th{
   border: none;
+}
+
+.table tbody td{
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .table.table-hover tbody tr:hover {
