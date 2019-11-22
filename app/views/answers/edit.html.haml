@@ -1,6 +1,5 @@
 .contain
   %h3 Answer
-
   = simple_form_for([@knowledge_basis, @answer], html: { class: 'form-horizontal' }) do |form|
     = form.input :text, label: false, input_html: {rows: 4}
     - if @answer.placeholders.present?
