@@ -2,4 +2,4 @@
   = hidden_field_tag :user_session_id, @question.user_session_id
   = hidden_field_tag :knowledge_basis_id, @knowledge_basis.id
   = text_field_tag :message, nil, placeholder: @knowledge_basis.widget_input_placeholder_text, class: "form-control string"
-  = button_tag @knowledge_basis.widget_submit_button_text, class: "btn btn-primary", disabled: true, id: "submit"
+  = button_tag @knowledge_basis.widget_submit_button_text, class: "btn btn-primary", disabled: true,style:"background-color:#1F9AA5;border-color:#1F9AA5;" ,id: "submit"

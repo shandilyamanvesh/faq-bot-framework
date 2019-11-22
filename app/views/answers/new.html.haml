@@ -31,4 +31,4 @@
   %br    
     .form-group
       = form.submit "Save", class: "btn btn-primary"
-      = link_to "Cancel", params[:question_ids].blank? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_basis_questions_path(@knowledge_basis), class: "btn"
+      = link_to "Cancel", params[:question_ids].blank? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_basis_questions_path(@knowledge_basis), class: "btn btn-warning"

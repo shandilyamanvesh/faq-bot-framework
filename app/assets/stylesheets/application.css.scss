@@ -42,14 +42,14 @@ input[type="radio"] {
     width: 30px;
     height: 15px;
     -webkit-appearance: none;
-    background: #c6c6c6;
+    background: #1F9AA5;
     outline: none;
     border-radius: 20px;
     transition: 0.7s;
 }
 
 input:checked[type="radio"] {
-  background: #064360;
+  background: #097A85;
 }
 
 input[type="radio"]:before {
@@ -160,7 +160,7 @@ input:checked[type="radio"]:before {
   color: #ff0000;
 }
 .popup .close:hover {
-  color: #06D85F;
+  color: #ff0000;
 }
 .popup .content {
   max-height: 30%;

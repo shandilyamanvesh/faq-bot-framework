@@ -21,7 +21,8 @@
       %br
       - if can? :import, Answer
         = simple_form_for(@knowledge_basis, url: import_knowledge_basis_answers_path, html: { method: :post }) do |form|
-          %a.btn.btn-primary.list-group.fa.fa-upload{:href => "#popup1"} Import
+          %a.btn.btn-primary.btn-file.list-group.fa.fa-upload{:href => "#popup1"}
+            %span Import
           #popup1.overlay
             .popup
               = render 'popup_fields', :f => form
