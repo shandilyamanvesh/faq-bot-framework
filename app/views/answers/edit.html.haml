@@ -1,7 +1,7 @@
-.contain
+.contain-ansdiv
   %h3 Answer
   = simple_form_for([@knowledge_basis, @answer], html: { class: 'form-horizontal' }) do |form|
-    = form.input :text, label: false, input_html: {rows: 4}
+    = form.input :text, as: :string ,label: false
     - if @answer.placeholders.present?
       - @answer.placeholders.each do |p|
         %span.badge{class: p.replaceable.blank? ? "badge-danger": "badge-info", }= link_to p.name, "#", "data-toggle": "modal", "data-target": "#placeholdersDialog", style: "color:white"
