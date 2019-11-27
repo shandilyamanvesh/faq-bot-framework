@@ -24,22 +24,7 @@ class KnowledgeBasesController < ApplicationController
     @knowledge_basis = KnowledgeBasis.find_by_id(params[:id])
     if @knowledge_basis
       render json:{
-        knowledge_basis:{
-          id: @knowledge_basis.id,
-          name: @knowledge_basis.name,
-          classifier:@knowledge_basis.classifier,
-          threshold:@knowledge_basis.threshold,
-          language_code:@knowledge_basis.language_code,
-          properties:@knowledge_basis.properties,
-          training: @knowledge_basis.training,
-          data_model:@knowledge_basis.data_model,
-          task: {
-            id:@knowledge_basis.task.id,
-            code:@knowledge_basis.task.code,
-            properties:@knowledge_basis.task.properties,
-            name:@knowledge_basis.task.name
-          }
-        }
+        knowledge_basis: @knowledge_basis.to_json_hash
       }, status: 200
     else
       render json: {
@@ -56,7 +41,7 @@ class KnowledgeBasesController < ApplicationController
         data: @knowledge_basis.questions.map do |q|
           {
             question: q.text,
-            answer: q.answer.text,
+            answer: q.answer&.text,
             type: q.flag
           }
         end
@@ -164,8 +149,8 @@ class KnowledgeBasesController < ApplicationController
 
   def train
     @knowledge_basis.update({training: true})
+    TrainClassifierJob.perform_later @knowledge_basis, current_user.id
     redirect_to knowledge_basis_questions_path(@knowledge_basis), notice: "Training started"
-    #TrainClassifierJob.perform_later @knowledge_basis, current_user.id
   end
 
   def webhook

@@ -1,6 +1,5 @@
 class TrainClassifierJob < ApplicationJob
   queue_as :default
-  #self.queue_adapter = :resque
 
   after_enqueue do |job|
     stream_id = "classifier_info_channel_#{arguments.second}"

@@ -64,6 +64,26 @@ class KnowledgeBasis < ApplicationRecord
     return if properties.nil? || properties.empty?
     errors.add(:properties,"Json format is not correct.") unless properties.is_json?
   end
+
+  def to_json_hash
+    {
+      id: id,
+      name: name,
+      classifier: classifier,
+      threshold: threshold,
+      language_code: language_code,
+      properties: properties,
+      training:  training,
+      data_model: data_model,
+      task: {
+        id: task.id,
+        code: task.code,
+        properties: task.properties,
+        name: task.name
+      }
+    }
+  end
+
   private
 
   def set_hash_id

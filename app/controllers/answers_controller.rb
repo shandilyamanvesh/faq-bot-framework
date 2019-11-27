@@ -1,6 +1,5 @@
 class AnswersController < ApplicationController
   load_and_authorize_resource :only => [:import]
-
   before_action :find_knowledge_basis
 
   def index
@@ -10,11 +9,9 @@ class AnswersController < ApplicationController
   def edit
     @tab = params[:tab]
     @answer = @knowledge_basis.answers.find(params[:id])
-  
   end
 
   def new
-   
     @tab = params[:tab]
     @answer = @knowledge_basis.answers.build(created_by: current_user.id)
   
@@ -39,8 +36,6 @@ class AnswersController < ApplicationController
       render 'new'
     end
   end
-   
-  
 
   def update
     @answer = Answer.find(params[:id])
@@ -104,9 +99,9 @@ class AnswersController < ApplicationController
   end
 
   private
+
   def answer_params
     params.require(:answer).permit(:text, :knowledge_basis_id, :created_by, :off_topic, questions_attributes: [:id, :text, :answer_id, :knowledge_basis_id, :flag, :user_session_id, :assigned_by, :confirmed_at, :probability, :_destroy], placeholders_attributes: [:id, :replaceable_type, :replaceable_id])
-
   end
 
   def find_knowledge_basis

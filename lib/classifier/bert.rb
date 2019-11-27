@@ -12,32 +12,41 @@ module Classifier
     TRAINFILE_DIR = Rails.configuration.classifiers['bert_trainfile_dir']
 
     def self.train(knowledge_basis)
-      training_file_path = "#{TRAINFILE_DIR}/train.tsv"
-      File.delete(training_file_path) if File.exists? training_file_path
+      train_payload = {}.to_json
+      url = "#{Rails.configuration.training_api_url}/train/#{knowledge_basis.id}"
 
-      File.open(training_file_path, 'w') do |file|
-        knowledge_basis.questions.training.each.with_index do |q, index|
-          file.write "#{index + 1}\t#{q.answer.text}\t#{q.text}\n"
-        end
-      end
-      so, se, s = Open3.capture3("python3 #{BASE_DIR}/train_classifier.py")
-      raise se unless s.success?
+      RestClient.post(
+       url,
+       train_payload,
+       content_type: 'json'
+      )
+    rescue
     end
-  
-    def self.predict(knowledge_basis, sentence)
-      answer_id = nil
-      probability = nil
-      if knowledge_basis && sentence
-        str, s = Open3.capture2("python3 #{BASE_DIR}/predict_classifier.py --bulk_predict=false --sentence='#{sentence.downcase}'")
 
-        if s.success?
-          str = str.split("\n").last
-          answer, probability = str.split('|')
-          answer_id = Answer.where(text: answer).first.id
-        end
+    def self.predict(knowledge_basis, sentence)
+      predict_payload = {
+        expression: sentence,
+        knowledge_basis: knowledge_basis.to_json_hash
+      }.to_json
+
+      url = "#{Rails.configuration.training_api_url}/predict"
+
+      response = RestClient.post(
+       url,
+       predict_payload,
+       content_type: 'json'
+      ).body
+
+      response = parse_json(response) || {}
+
+      answer_id = nil
+      probability = response[:score].to_f
+      if response && response[:prediction]
+        answer_id = Answer.find_by(text: response[:prediction])&.id
       end
 
-      return answer_id, probability.to_f
+      return answer_id, probability
+    rescue
     end
 
     def self.reset(knowledge_basis)
@@ -49,7 +58,7 @@ module Classifier
     def parse_json(json_str)
       JSON.parse(json_str).deep_symbolize_keys
     rescue StandardError
-      []
+      {}
     end
   end
 end
