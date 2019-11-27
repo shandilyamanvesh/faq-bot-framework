@@ -23,9 +23,7 @@ class AnswersController < ApplicationController
     end
   end
 
-  def create
-
-    
+  def create  
     question_ids = answer_params[:questions_attributes].to_h.map { |k,v| v[:id] }
     question_ids.reject!(&:blank?)
     @answer = Answer.new(answer_params.merge({ question_ids: question_ids }))
@@ -40,9 +38,6 @@ class AnswersController < ApplicationController
     else
       render 'new'
     end
-  else
-    
-
   end
    
   
