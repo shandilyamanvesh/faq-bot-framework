@@ -1,0 +1,12 @@
+.contain
+	%h3 New Task
+	= simple_form_for @tasks ,html: { class: 'form-horizontal' ,:autocomplete => "off" } do |f|
+		= f.input :name, required: false
+		= f.input :code
+		.card.mb-3
+			.card-header
+				Json Properties
+			.card-body
+				= f.input :properties
+		= f.submit "Save", class: "btn btn-primary"
+  

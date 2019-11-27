@@ -1,49 +1,65 @@
-= simple_form_for(knowledge_basis, html: { class: 'form-horizontal' }) do |form|
-  
-  = form.input :name, required: false
-  = form.input :language_code, label: "Language", collection: [["English", "en"], ["French", "fr"], ["German", "de"], ["Swedish", "sv"]], include_blank: false
-  .card.mb-3
-    .card-header
-      Classifier
-    .card-body
-      = form.input :classifier, collection: KnowledgeBasis::CLASSIFIERS, include_blank: false, label: "Algorithm"
-      = form.input :threshold, hint: "Probability minimum for auto-matching (value between 0.1 and 1.0)", input_html: { min: '0.1', step: '0.1', max: '1.0' }
-  .card.mb-3
-    .card-header
-      Messages
-    .card-body
-      = form.input :feedback_question
-      = form.input :waiting_message, label: "Waiting message", input_html: { rows: "2" }
-      = form.input :request_for_user_value_message, label: "Request for user value"
+.contain
+  = simple_form_for(knowledge_basis, html: { class: 'form-horizontal',:autocomplete => "off" }) do |form|
+    = form.input :name, required: false
+    = form.input :language_code, label: "Language", collection: [["English", "en"], ["French", "fr"], ["German", "de"], ["Swedish", "sv"]], include_blank: false
+    .card.mb-3
+      .card-header
+        Classifier
+      .card-body
+        = form.input :classifier, collection: KnowledgeBasis::CLASSIFIERS, include_blank: false, label: "Algorithm"
+        = form.input :threshold, hint: "Probability minimum for auto-matching (value between 0.1 and 1.0)", input_html: { min: '0.1', step: '0.1', max: '1.0' }
+    .card.mb-3
+      .card-header
+        Messages
+      .card-body
+        = form.input :feedback_question
+        = form.input :waiting_message, label: "Waiting message", input_html: { rows: "2" }
+        = form.input :request_for_user_value_message, label: "Request for user value"
 
-  .card.mb-3
-    .card-header
-      = form.check_box :allow_facebook_messenger_access
-      Facebook messenger
-    .card-body
-      = form.input :verify_token, hint: "(Facebook App / Products / Webhooks / Edit subscription)"
-      = form.input :access_token, label: "Page access token", hint: "(Facebook App / Products / Messenger / Token generator)"
-      - unless @knowledge_basis.new_record?
-        .form-group
-          %label.form-control-label Webhook
-          = text_field_tag :facebook_web_hook, knowledge_basis_webhook_url(@knowledge_basis), class: "form-control", onclick: "this.select();", readonly: true
+    .card.mb-3
+      .card-header
+        = form.check_box :allow_facebook_messenger_access
+        Facebook messenger
+      .card-body
+        = form.input :verify_token, hint: "(Facebook App / Products / Webhooks / Edit subscription)"
+        = form.input :access_token, label: "Page access token", hint: "(Facebook App / Products / Messenger / Token generator)"
+        - unless @knowledge_basis.new_record?
+          .form-group
+            %label.form-control-label Webhook
+            = text_field_tag :facebook_web_hook, knowledge_basis_webhook_url(@knowledge_basis), class: "form-control", onclick: "this.select();", readonly: true
 
-  .card.mb-3
-    .card-header
-      = form.check_box :allow_anonymous_access
-      Widget (anonymous access)
-    .card-body
-      = form.input :welcome_message
-      = form.input :widget_input_placeholder_text, label: "Placeholder text"
-      = form.input :widget_submit_button_text, label: "Submit button label"
-      = form.input :widget_css, label: "Custom CSS", input_html: { rows: "5" }  
+    .card.mb-3
+      .card-header
+        = form.check_box :allow_anonymous_access
+        Widget (anonymous access)
+      .card-body
+        = form.input :welcome_message
+        = form.input :widget_input_placeholder_text, label: "Placeholder text"
+        = form.input :widget_submit_button_text, label: "Submit button label"
+        = form.input :widget_css, label: "Custom CSS", input_html: { rows: "5" }
 
-  = form.submit "Save", class: "btn btn-primary"
-  = link_to "Cancel", @knowledge_basis.persisted? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_bases_path, class: "btn"
+    .card.mb-3
+      .card-header
+        More info
+      .card-body
+        = form.input :properties, label: "Properties (json)", input_html: { rows: "5" }
+
+    .card.mb-3
+      .card-header
+        Select Task
+      .card-body
+        = form.input :task_id, label: "Task", collection: Task.all.map { |t| [t.name, t.id] }, include_blank: false
+
+    .card.mb-3
+      .card-header
+        data source
+      .card-body
+        = form.input :data_model, label: "data source", collection: data_sources.map { | d | [ d[:name], d[:code] ]}, include_blank: false
+    = form.submit "Save", class: "btn btn-primary"
+    = link_to "Cancel", @knowledge_basis.persisted? ? knowledge_basis_answers_path(@knowledge_basis) : knowledge_bases_path, class: " btn btn-warning"
 
 
-  - unless @knowledge_basis.new_record?
-    .float-right
-      = link_to "Reset", knowledge_basis_reset_path(@knowledge_basis), method: :delete, style: "margin-right: 10px", class: "btn btn-warning", data: { confirm: "This action will delete all answers and questions, and also reset the classifier. Are you sure?" } if can? :reset, @knowledge_basis
-      = link_to "Delete", knowledge_basis_path(@knowledge_basis), method: :delete, class: "btn btn-danger", data: { confirm: "This action will completely delete the knowledge basis, including all answers and questions. Are you sure?" } if can? :destroy, @knowledge_basis
+    - unless @knowledge_basis.new_record?
+      .float-right
+        = link_to "", knowledge_basis_path(@knowledge_basis), method: :delete, class: "fa fa-trash fa-2x", data: { confirm: "This action will completely delete the knowledge basis, including all answers and questions. Are you sure?" } if can? :destroy, @knowledge_basis
 

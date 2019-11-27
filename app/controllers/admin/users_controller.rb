@@ -50,7 +50,7 @@ class Admin::UsersController < ApplicationController
 
   def send_reset_password_instructions
     @user = User.find(params[:user_id])
-    @user.send_reset_password_instructions 
+    @user.send_reset_password_instructions
     redirect_to admin_users_url, notice: "Sucessfully sent password reset instructions to '#{@user}'"
   end
 

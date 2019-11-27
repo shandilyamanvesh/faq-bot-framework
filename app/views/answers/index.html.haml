@@ -1,33 +1,33 @@
 %h3 Knowledge
   
-.container
+.container-fluid
   %ul.nav.nav-tabs
     %li.nav-item
       = link_to knowledge_basis_answers_path(@knowledge_basis), class: "nav-link #{params['tab'].blank? ? 'active' : nil}" do 
         Answers
         %span.badge.badge-secondary= @answers.count
 
-    %li.nav-item
-      = link_to knowledge_basis_answers_path(@knowledge_basis, tab: "global_values"), class: "nav-link #{params['tab'] == 'global_values' ? 'active' : nil}" do
-        Global values
-        %i.fa.fa-question-circle{title: "Global values are constant strings that can be embedded in answers via placeholders.\n\nExample: A phone number. If the number changes, only the global value needs to be updated.", "data-tooltip": true, style: "display:#{params['tab'] == 'global_values' ? 'inline' : 'none'}"}
+    -# %li.nav-item
+    -#   = link_to knowledge_basis_answers_path(@knowledge_basis, tab: "global_values"), class: "nav-link #{params['tab'] == 'global_values' ? 'active' : nil}" do
+    -#     Global values
+    -#     %i.fa.fa-question-circle{title: "Global values are constant strings that can be embedded in answers via placeholders.\n\nExample: A phone number. If the number changes, only the global value needs to be updated.", "data-tooltip": true, style: "display:#{params['tab'] == 'global_values' ? 'inline' : 'none'}"}
       
-    %li.nav-item
-      = link_to knowledge_basis_answers_path(@knowledge_basis, tab: "user_values"), class: "nav-link #{params['tab'] == 'user_values' ? 'active' : nil}" do
-        User values
-        %i.fa.fa-question-circle{title: "User values are individual variables stored in the user session. They can be embedded in answers via placeholders, but they can also be used as parameters for an API call. If a user value is missing yet, the user will be prompted for it.\n\nExamples:\n1. The user's name. Once stored in the user session, it can be used to personalized the answers.\n2. The contract id. It can be used as parameter for an API to retrieve individual information on the user's contract.", "data-tooltip": true, style: "display:#{params['tab'] == 'user_values' ? 'inline' : 'none'}"}
-    %li.nav-item
-      = link_to knowledge_basis_answers_path(@knowledge_basis, tab: "external_api_connections"), class: "nav-link #{params['tab'] == 'external_api_connections' ? 'active' : nil}" do
-        External APIs
-        %i.fa.fa-question-circle{title: "External APIs help customize the answer.", "data-tooltip": true, style: "display:#{params['tab'] == 'external_api_connections' ? 'inline' : 'none'}"}
+    -# %li.nav-item
+    -#   = link_to knowledge_basis_answers_path(@knowledge_basis, tab: "user_values"), class: "nav-link #{params['tab'] == 'user_values' ? 'active' : nil}" do
+    -#     User values
+    -#     %i.fa.fa-question-circle{title: "User values are individual variables stored in the user session. They can be embedded in answers via placeholders, but they can also be used as parameters for an API call. If a user value is missing yet, the user will be prompted for it.\n\nExamples:\n1. The user's name. Once stored in the user session, it can be used to personalized the answers.\n2. The contract id. It can be used as parameter for an API to retrieve individual information on the user's contract.", "data-tooltip": true, style: "display:#{params['tab'] == 'user_values' ? 'inline' : 'none'}"}
+    -# %li.nav-item
+    -#   = link_to knowledge_basis_answers_path(@knowledge_basis, tab: "external_api_connections"), class: "nav-link #{params['tab'] == 'external_api_connections' ? 'active' : nil}" do
+    -#     External APIs
+    -#     %i.fa.fa-question-circle{title: "External APIs help customize the answer.", "data-tooltip": true, style: "display:#{params['tab'] == 'external_api_connections' ? 'inline' : 'none'}"}
 
   %div.tab-content
     - if params['tab'].blank?
       = render 'answers', :answers => @answers
-    - elsif params['tab'] == "global_values"
-      = render '/global_values/global_values', :global_values => @knowledge_basis.global_values.order("name DESC")
-    - elsif params['tab'] == "user_values"
-      = render '/user_values/user_values', :user_values => @knowledge_basis.user_values.order("name DESC")
-    - elsif params['tab'] == "external_api_connections"
-      = render '/external_api_connections/external_api_connections', :external_api_connections => @knowledge_basis.external_api_connections.order("name DESC")
+    -# - elsif params['tab'] == "global_values"
+    -#   = render '/global_values/global_values', :global_values => @knowledge_basis.global_values.order("name DESC")
+    -# - elsif params['tab'] == "user_values"
+    -#   = render '/user_values/user_values', :user_values => @knowledge_basis.user_values.order("name DESC")
+    -# - elsif params['tab'] == "external_api_connections"
+    -#   = render '/external_api_connections/external_api_connections', :external_api_connections => @knowledge_basis.external_api_connections.order("name DESC")
 

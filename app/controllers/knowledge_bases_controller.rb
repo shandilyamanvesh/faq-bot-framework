@@ -1,12 +1,13 @@
 class KnowledgeBasesController < ApplicationController
   include Facebook
-  
-  # expose Facebook webhook 
-  skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget]
-  load_and_authorize_resource except: [:webhook, :receive_message, :widget]
-  skip_before_action :verify_authenticity_token, only: [:webhook, :receive_message, :widget]
+  include KnowledgeBasesHelper
 
-  skip_authorization_check only: [:index, :edit, :update, :webhook, :receive_message, :widget]
+  # expose Facebook webhook
+  skip_before_action :authenticate_user!, only: [:webhook, :receive_message, :widget, :show, :list, :update_status]
+  load_and_authorize_resource except: [:webhook, :receive_message, :widget, :show, :list, :update_status]
+  skip_before_action :verify_authenticity_token, only: [:webhook, :receive_message, :widget, :show, :list, :update_status]
+
+  skip_authorization_check only: [:index, :edit, :update, :webhook, :receive_message, :widget, :show, :list, :update_status]
 
   before_action :find_knowledge_basis, only: [:edit, :update, :destroy, :train, :reset, :clear_dashboard, :export, :receive_message]
 
@@ -14,9 +15,72 @@ class KnowledgeBasesController < ApplicationController
 
   def index
     @knowledge_bases = current_user.role == "admin" ? KnowledgeBasis.all : current_user.knowledge_bases
-
     if current_user.role != "admin" && @knowledge_bases.present?
-      redirect_to knowledge_basis_answers_path(@knowledge_bases.first) 
+      redirect_to knowledge_basis_answers_path(@knowledge_bases.first)
+    end
+  end
+
+  def show
+    @knowledge_basis = KnowledgeBasis.find_by_id(params[:id])
+    if @knowledge_basis
+      render json:{
+        knowledge_basis:{
+          id: @knowledge_basis.id,
+          name: @knowledge_basis.name,
+          classifier:@knowledge_basis.classifier,
+          threshold:@knowledge_basis.threshold,
+          language_code:@knowledge_basis.language_code,
+          properties:@knowledge_basis.properties,
+          training: @knowledge_basis.training,
+          data_model:@knowledge_basis.data_model,
+          task: {
+            id:@knowledge_basis.task.id,
+            code:@knowledge_basis.task.code,
+            properties:@knowledge_basis.task.properties,
+            name:@knowledge_basis.task.name
+          }
+        }
+      }, status: 200
+    else
+      render json: {
+        error: "No knowledge base found",
+        status: 404
+      }, status: 404
+    end
+  end
+
+  def list
+    @knowledge_basis = KnowledgeBasis.find_by_id(params[:knowledge_basis_id])
+    if @knowledge_basis
+      render json: {
+        data: @knowledge_basis.questions.map do |q|
+          {
+            question: q.text,
+            answer: q.answer.text,
+            type: q.flag
+          }
+        end
+      }, status: 200
+    else
+      render json: {
+        error: "No knowledge base found",
+        status: 404
+      }, status: 404
+    end
+  end
+
+  def update_status
+    @knowledge_basis = KnowledgeBasis.find_by_id(params[:knowledge_basis_id])
+    if @knowledge_basis && params[:knowledge_basis]
+      @knowledge_basis.update({
+                                training: params[:knowledge_basis][:training]
+      })
+      render json: { status: 200 }, status: 200
+    else
+      render json: {
+        error: "No knowledge base found",
+        status: 404
+      }, status: 404
     end
   end
 
@@ -29,12 +93,15 @@ class KnowledgeBasesController < ApplicationController
 
   def create
     @knowledge_basis = KnowledgeBasis.create(knowledge_basis_params)
-    if @knowledge_basis.save
+    if @knowledge_basis.errors.any?
+      flash[:error]= @knowledge_basis.errors.full_messages.join("\n")
+      render 'edit'
+    elsif @knowledge_basis.save
       redirect_to knowledge_bases_url, notice: "Sucessfully created '#{@knowledge_basis.name}'"
     else
       render 'edit'
     end
-  end	
+  end
 
   def update
     if @knowledge_basis.update(knowledge_basis_params)
@@ -58,18 +125,19 @@ class KnowledgeBasesController < ApplicationController
 
         # threshold was lowered
         if [old_threshold, new_threshold].max == old_threshold
-          @knowledge_basis.questions.not_training.unmatched.each do |q| 
+          @knowledge_basis.questions.not_training.unmatched.each do |q|
             q.find_matching_answer
             q.save
           end
-        # threshold was increased
+          # threshold was increased
         else
           # reset answers for non-confirmed questions below the new threshold
           @knowledge_basis.questions.not_training.where(["probability < ?", new_threshold]).update_all(answer_id: nil, probability: nil)
         end
       end
-      redirect_to knowledge_basis_answers_path(@knowledge_basis), notice: "Sucessfully updated '#{@knowledge_basis.name}'"
+      redirect_to knowledge_bases_url, notice: "Sucessfully updated '#{@knowledge_basis.name}'"
     else
+      flash[:error]= @knowledge_basis.errors.full_messages.join("\n")
       render 'edit'
     end
   end
@@ -95,12 +163,14 @@ class KnowledgeBasesController < ApplicationController
   end
 
   def train
-    TrainClassifierJob.perform_later @knowledge_basis, current_user.id
+    @knowledge_basis.update({training: true})
+    redirect_to knowledge_basis_questions_path(@knowledge_basis), notice: "Training started"
+    #TrainClassifierJob.perform_later @knowledge_basis, current_user.id
   end
 
   def webhook
     @knowledge_basis = KnowledgeBasis.find(params[:knowledge_basis_id])
-    
+
     render plain: "Not found", status: 404 and return if (@knowledge_basis.blank? || !@knowledge_basis.allow_facebook_messenger_access)
     if params["hub.mode"] == "subscribe" && params["hub.challenge"]
       if params["hub.verify_token"] == @knowledge_basis.verify_token
@@ -136,12 +206,12 @@ class KnowledgeBasesController < ApplicationController
             q = user_session.most_recent_question
             q.send_response_to_user
 
-          # new question
+            # new question
           else
             @knowledge_basis.questions.create!(text: text, user_session: user_session, probability: nil)
           end
-  
-        # handle feedback loop
+
+          # handle feedback loop
         elsif (event[:postback] && (payload = event[:postback][:payload]))
           json = JSON.parse(payload)
           question_id = json["question_id"].to_i
@@ -154,7 +224,7 @@ class KnowledgeBasesController < ApplicationController
               question.reject!
             end
           end
-  
+
         end
       end
     end
@@ -170,17 +240,37 @@ class KnowledgeBasesController < ApplicationController
 
   def export
     respond_to do |format|
-      format.csv { 
+      format.csv {
         send_data @knowledge_basis.questions.to_csv,
         filename: "logs_#{@knowledge_basis.to_identifier}_#{Time.now.to_i}.csv",
-        type: 'text/csv; charset=utf-8' 
+        type: 'text/csv; charset=utf-8'
       }
     end
   end
 
   private
   def knowledge_basis_params
-    params.require(:knowledge_basis).permit(:name, :verify_token, :access_token, :classifier, :threshold, :feedback_question, :language_code, :allow_anonymous_access, :widget_input_placeholder_text, :widget_submit_button_text, :allow_facebook_messenger_access, :widget_css, :waiting_message, :welcome_message, :request_for_user_value_message)
+    params.require(:knowledge_basis).permit(
+      :name,
+      :verify_token,
+      :access_token,
+      :classifier,
+      :threshold,
+      :feedback_question,
+      :language_code,
+      :allow_anonymous_access,
+      :widget_input_placeholder_text,
+      :widget_submit_button_text,
+      :allow_facebook_messenger_access,
+      :widget_css,
+      :properties,
+      :task_id,
+      :waiting_message,
+      :welcome_message,
+      :request_for_user_value_message,
+      :training,
+      :data_model
+    )
   end
 
   def find_knowledge_basis

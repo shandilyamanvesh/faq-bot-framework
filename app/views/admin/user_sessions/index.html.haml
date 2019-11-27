@@ -1,14 +1,22 @@
-.container
+.container-fluid
   %h3 User sessions
   .row
     .col-12
 
-      %table.table.table-striped
-        - @user_sessions.each do |us|
+      %table.table.table-hover
+        %thead
           %tr
-            %td= us.created_at.strftime("%e %B %Y, %H:%M:%S")
-            %td= link_to us.knowledge_basis.name, knowledge_basis_questions_path(us.knowledge_basis)
-            %td= us.questioner_id
-            %td= us.questioner_name
-            %td.pull-right
-              = link_to "Delete", admin_user_session_path(us), method: :delete, class: "btn btn-danger", data: { confirm: "Deleting the user session will destroy the associated questions, too. Are you sure?" }
+            %th{style: "min-width:200px"} Date & Time
+            %th Name
+            %th Questioner Id
+            %th Questioner Name
+            %th
+        %tbody
+          - @user_sessions.each do |us|
+            %tr
+              %td= us.created_at.strftime("%e %B %Y, %H:%M:%S")
+              %td= link_to us.knowledge_basis.name, knowledge_basis_questions_path(us.knowledge_basis)
+              %td= us.questioner_id
+              %td= us.questioner_name
+              %td.pull-right
+                = link_to "", admin_user_session_path(us), method: :delete, class: "fa fa-trash fa-lg", data: { confirm: "Deleting the user session will destroy the associated questions, too. Are you sure?" }

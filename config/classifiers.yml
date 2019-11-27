@@ -1,7 +1,7 @@
 default: &default
-  classifiers_dir: <%= ENV['CLASSIFIERS_DIR'] || "/home/ubuntu/classifiers" %>
-  pretrained_vectors_dir: <%= ENV['PRETRAINED_VECTORS_DIR'] || "/home/ubuntu/wordvectors/wiki" %>
-  fast_text_path: <%= ENV['FAST_TEXT_DIR'] || "/home/ubuntu/fastText-0.2.0" %>
+  classifiers_dir: <%= ENV['CLASSIFIERS_DIR'] || "/home/tejasbandwane/lab/classifier" %>
+  pretrained_vectors_dir: <%= ENV['PRETRAINED_VECTORS_DIR'] || "/home/tejasbandwane/lab/wiki.en" %>
+  fast_text_path: <%= ENV['FAST_TEXT_DIR'] || "/usr/local/bin" %>
   bert_base_dir: <%= ENV['BERT_BASE_DIR'] || "/data/ml_work/bert" %>
   bert_trainfile_dir: <%= ENV['BERT_TRAINFILE_DIR'] || "/data/ml_work/bert/whizdata" %>
 

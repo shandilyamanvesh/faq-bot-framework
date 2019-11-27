@@ -29,20 +29,37 @@ module FaqBotFramework
     config.autoload_paths += %W(#{config.root}/lib)
     config.eager_load_paths += %W(#{config.root}/lib)
 
-    config.time_zone = 'Europe/Paris'
-
-    if ENV["RAILS_LOG_TO_STDOUT"].present?
-      logger           = ActiveSupport::Logger.new(STDOUT)
-      logger.formatter = config.log_formatter
-      config.logger    = logger
-    else
-      rails_log_dir    = ENV["RAILS_LOG_DIR"] || "/home/ubuntu/LogFiles"
-      FileUtils.mkdir_p rails_log_dir
-      logfile          = File.join(rails_log_dir, "#{Rails.env}.log")
-      logger           = ActiveSupport::Logger.new(logfile)
-      logger.formatter = config.log_formatter
-      config.logger    = logger
+    def settings_hash
+      base = config_hash_from_file('settings')
+      dev  = config_hash_from_file('settings.dev')
+      base.merge(dev)
     end
+
+    def config_hash_from_file(name)
+      YAML.safe_load(File.read("config/#{name}.yml"))
+    rescue Errno::ENOENT
+      {}
+    end
+
+    # Load app settings
+    settings_hash.each do |name, value|
+      value = Rails.root.join(value) if /.+_dir/.match?(name) # set abs paths
+      value.deep_symbolize_keys! if value.is_a?(Hash)
+      config.send("#{name}=", value)
+    end
+
+    # if ENV["RAILS_LOG_TO_STDOUT"].present?
+    #   logger           = ActiveSupport::Logger.new(STDOUT)
+    #   logger.formatter = config.log_formatter
+    #   config.logger    = logger
+    # else
+    #   rails_log_dir    = ENV["RAILS_LOG_DIR"] || "/home/ubuntu/LogFiles"
+    #   FileUtils.mkdir_p rails_log_dir
+    #   logfile          = File.join(rails_log_dir, "#{Rails.env}.log")
+    #   logger           = ActiveSupport::Logger.new(logfile)
+    #   logger.formatter = config.log_formatter
+    #   config.logger    = logger
+    # end
 
     config.classifiers = config_for(:classifiers)
   end

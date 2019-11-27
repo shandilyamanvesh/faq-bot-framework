@@ -1,0 +1,4 @@
+slack_druid_data_model_api_url:     http://10.0.11.5:4000/api/dataSources
+slack_druid_sign_in_api_url:     http://10.0.11.5:4000/api/auth/sign_in
+email: admin@whiz.ai
+password: 12345678

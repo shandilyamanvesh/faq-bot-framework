@@ -12,7 +12,6 @@ Rails.application.routes.draw do
     resources :user_values, except: [:show, :index]
     resources :external_api_connections, except: [:show, :index]
     resources :analytics, only: [:index]
-
     post 'train'
     delete 'reset'
     delete 'clear_dashboard'
@@ -22,8 +21,12 @@ Rails.application.routes.draw do
     # Facebook webhook
     get  'webhook', to: :webhook
     post 'webhook', to: 'knowledge_bases#receive_message'
+
+    get 'list',         to: 'knowledge_bases#list'
+    post 'updatestatus', to: 'knowledge_bases#update_status'
   end
 
+  resources :tasks
   resources :knowledge_bases, param: :hash_id, only: [] do
     get 'widget'
   end
