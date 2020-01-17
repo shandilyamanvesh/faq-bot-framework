@@ -12,13 +12,11 @@ module Classifier
     TRAINFILE_DIR = Rails.configuration.classifiers['bert_trainfile_dir']
 
     def self.train(knowledge_basis)
-      train_payload = {}.to_json
-      url = "#{Rails.configuration.training_api_url}/train/#{knowledge_basis.id}"
+      url = "#{Rails.configuration.training_api_url}/Training?id=#{knowledge_basis.id}"
 
-      RestClient.post(
-       url,
-       train_payload,
-       content_type: 'json'
+      RestClient.get(
+        url,
+        content_type: 'json'
       )
     rescue
     end
@@ -26,15 +24,15 @@ module Classifier
     def self.predict(knowledge_basis, sentence)
       predict_payload = {
         expression: sentence,
-        knowledge_basis: knowledge_basis.to_json_hash
+        knowledge_basis: knowledge_basis.id
       }.to_json
 
-      url = "#{Rails.configuration.training_api_url}/predict"
+      url = "#{Rails.configuration.training_api_url}/Predict"
 
       response = RestClient.post(
-       url,
-       predict_payload,
-       content_type: 'json'
+        url,
+        predict_payload,
+        content_type: 'json'
       ).body
 
       response = parse_json(response) || {}
