@@ -53,7 +53,7 @@ module Classifier
 
     private
 
-    def parse_json(json_str)
+    def self.parse_json(json_str)
       JSON.parse(json_str).deep_symbolize_keys
     rescue StandardError
       {}
