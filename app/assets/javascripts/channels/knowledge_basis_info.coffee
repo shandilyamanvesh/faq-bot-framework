@@ -27,7 +27,7 @@ App.knowledge_basis_info = App.cable.subscriptions.create "KnowledgeBasisInfoCha
         # new question from user
         if data["target"] == "#matched_questions" || data["target"] == "#unmatched_questions"
           $("#no_questions").hide()
-          $(data["target"]).show().append(data["partial"])
+          $(data["target"]).show().prepend(data["partial"])
           $('select.select2').select2(
             maximumSelectionSize: 1
             placeholder: 'Select existing answer').on 'select2:select', (e) ->

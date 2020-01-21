@@ -29,12 +29,12 @@
       
       #unmatched_questions{style: (@questions.unmatched.count > 0 && params[:filter] != "matched") ? nil : "display: none"}
         %h3 Unmatched questions
-        - @questions.unmatched.each do |q|
+        - @questions.unmatched.reverse_each do |q|
           = render partial: "card", locals: {q: q, knowledge_basis: @knowledge_basis, user: current_user}
 
       #matched_questions{style: (@questions.matched.count > 0 && params[:filter] != "unmatched") ? nil : "display: none"}
         %h3 Matched questions
-        - @questions.matched.each do |q|
+        - @questions.matched.reverse_each do |q|
           = render partial: "card", locals: {q: q, knowledge_basis: @knowledge_basis, user: current_user}
 
       = paginate @questions
