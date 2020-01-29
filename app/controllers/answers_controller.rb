@@ -74,14 +74,14 @@ class AnswersController < ApplicationController
       uploaded_type =params[:knowledge_basis][:popup_radio]
       if params[:knowledge_basis][:popup_radio]== "2"
         # flash[:notice] = 'you have deleted old answers set.'
-        @knowledge_basis.answers.destroy_all
+        @knowledge_basis.answers.delete_all
       end
       # normal import
       uploaded_io= params[:knowledge_basis][:file]
       File.open(Rails.root.join('tmp',uploaded_io.original_filename), 'wb') do |file|
         file.write(uploaded_io.read)
       end
-      ImportJob.perform_now @knowledge_basis.id, uploaded_io.original_filename, current_user.id
+      ImportJob.perform_later @knowledge_basis.id, uploaded_io.original_filename, current_user.id
       redirect_to knowledge_basis_answers_path(@knowledge_basis), notice: "Import scheduled, please wait"
     end
   end
