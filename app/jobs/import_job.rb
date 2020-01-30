@@ -4,14 +4,14 @@ class ImportJob < ApplicationJob
   queue_as :default
 
   # after_enqueue do |job|
-  #  stream_id = "classifier_info_channel_#{arguments.second}"
+  #  stream_id = "classifier_info_channel_#{arguments.last}"
   #  ActionCable.server.broadcast(stream_id, message: "import_scheduled")
   # end
 
-  # after_perform do |job|
-  #  stream_id = "classifier_info_channel_#{arguments.second}"
-  #  ActionCable.server.broadcast(stream_id, message: "import_completed")
-  # end
+  after_perform do |job|
+   stream_id = "classifier_info_channel_#{arguments.last}"
+   ActionCable.server.broadcast(stream_id, message: "import_completed")
+  end
 
   def perform(knowledge_basis_id, original_filename, current_user_id)
     count = 0

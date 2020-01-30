@@ -14,5 +14,5 @@ App.classifier_info = App.cable.subscriptions.create "ClassifierInfoChannel",
     else if data["message"] == "training_completed"
       $("#train_classifier_button").prop('value', 'Train classifier now!');
       $("#train_classifier_button").prop('disabled', false);
-
-
+    else if (data["message"] == "import_completed" && (window.location.pathname.match(/\/knowledge_bases\/[0-9]*\/answers/)[0]).length > 0)
+      location.reload();
