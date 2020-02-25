@@ -10,7 +10,7 @@ module Classifier
     FileUtils.mkdir_p CLASSIFIERS_DIR
     FileUtils.mkdir_p PRETRAINED_VECTORS_DIR
 
-  	def self.train(knowledge_basis)   
+    def self.train(knowledge_basis)
       training_file_path = "#{CLASSIFIERS_DIR}/#{knowledge_basis.id}_training.txt"
       model_file_path = "#{CLASSIFIERS_DIR}/#{knowledge_basis.id}_model"
       pretrained_vectors_file_path = "#{PRETRAINED_VECTORS_DIR}/wiki.#{knowledge_basis.language_code}.vec"
@@ -26,10 +26,11 @@ module Classifier
         stdout, stderr, status = Open3.capture3("#{FAST_TEXT_DIR}/fasttext supervised -dim 300 -pretrainedVectors #{pretrained_vectors_file_path} -input #{training_file_path} -output #{model_file_path}")
         
         raise stderr unless status.success?
+        # set flag to make it available for training
+        knowledge_basis.update(training: false)
       ensure
         File.delete(training_file_path) if File.exists? training_file_path # cleanup - remove training file
       end
-
     end
 
     def self.predict(knowledge_basis, text)
@@ -48,7 +49,6 @@ module Classifier
       end
   
       return answer_id, probability.to_f
-
     end
 
     def self.reset(knowledge_basis)

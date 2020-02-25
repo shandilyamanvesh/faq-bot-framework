@@ -150,7 +150,7 @@ class KnowledgeBasesController < ApplicationController
   def train
     @knowledge_basis.update({training: true})
     TrainClassifierJob.perform_later @knowledge_basis, current_user.id
-    redirect_to knowledge_basis_questions_path(@knowledge_basis), notice: "Training started"
+    redirect_to knowledge_basis_questions_path(@knowledge_basis)
   end
 
   def webhook
